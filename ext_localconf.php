@@ -34,6 +34,10 @@ if (TYPO3_MODE=='BE')	{
 		array('APIDocs', '#', $_REL_PATH.'icons/ico_t3.gif'),
 		array('TYPO3 API 4.1.6', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.1.6/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
 		array('TYPO3 API 4.2.0', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.2.0/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
+	
+			// T3dev
+		array('T3dev', '#', $_REL_PATH.'icons/ico_t3.gif'),
+		array('T3dev project homepage', 'http://forge.typo3.org/projects/show/extension-t3dev', $_REL_PATH.'icons/ico_t3.gif'),
 	);
 }
 ?>

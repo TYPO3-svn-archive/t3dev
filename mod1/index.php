@@ -30,7 +30,9 @@ require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsModule.php');
+require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_calcModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_defaultModule.php');
+require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_parserModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_phpDocModule.php');
 
 $LANG->includeLLFile('EXT:t3dev/mod1/locallang.xml');

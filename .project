@@ -3,6 +3,7 @@
 	<name>t3dev</name>
 	<comment></comment>
 	<projects>
+		<project>typo3_src-4.2.0</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

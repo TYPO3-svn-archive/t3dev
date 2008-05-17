@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;tools_txt3devM1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title">T3dev</label>
+			<label index="basicsModuleTitle">basic settings</label>
+			<label index="basicsModuleDescription"></label>
+			<label index="phpDocModuleTitle">PHP script documentation helper</label>
+			<label index="phpDocModuleDescription">A tool which helps to insert PHPDoc comments for PHP functions in a script.</label>
+			<label index="defaultModuleTitle">please select a tool</label>
+			<label index="defaultModuleDescription">please select a tool</label>
+			<label index="label_select_extension">select extension</label>
+			<label index="label_select_file">select file</label>
+			<label index="label_file">File</label>
+			<label index="ext_local">local extensions</label>
+			<label index="ext_global">global extensions</label>
+			<label index="ext_system">system extensions</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">T3dev</label>
+			<label index="basicsModuleTitle">Basiseinstellungen</label>
+			<label index="basicsModuleDescription"></label>
+			<label index="phpDocModuleTitle">PHP Script Dokumentation Helfer</label>
+			<label index="phpDocModuleDescription">Ein Tool welches hilft PHPDoc Kommentare für PHP Funktionen einzufügen.</label>
+			<label index="defaultModuleTitle">Bitte ein Tool auswählen</label>
+			<label index="defaultModuleDescription">Bitte ein Tool auswählen</label>
+			<label index="label_select_extension">Wähle Extension</label>
+			<label index="label_select_file">Wähle Datei</label>
+			<label index="label_file">Datei</label>
+			<label index="ext_local">lokale Extensions</label>
+			<label index="ext_global">globale Extensions</label>
+			<label index="ext_system">System-Extensions</label>
+		</languageKey>
+	</data>
+</T3locallang>

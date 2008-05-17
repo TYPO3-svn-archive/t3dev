@@ -61,8 +61,8 @@ class tx_t3dev_basicsModule {
 					$opt[]='<option value="'.htmlspecialchars($dirName).'"'.$selVal.'>'.htmlspecialchars($dirName).'</option>';
 				}
 				return '<select name="SET[extSel]" onchange="jumpToUrl(\'?SET[extSel]=\'+this.options[this.selectedIndex].value,this);">'.implode('',$opt).'</select>';
-			} else return 'ERROR: Could not read directories from path: "'.$path.'"';
-		} else return 'ERROR: No local extensions path: "'.$path.'"';
+			} else return $this->LANG->getLL('err_directory_notreadable').': "'.$path.'"';
+		} else return $this->LANG->getLL('err_no_extension_path').': "'.$path.'"';
 	}
 
 	/**
@@ -89,8 +89,8 @@ class tx_t3dev_basicsModule {
 					}
 					return '<select name="SET[phpFile]" onchange="jumpToUrl(\'?SET[phpFile]=\'+this.options[this.selectedIndex].value,this);">'.implode('',$opt).'</select>'.
 					chr(10).chr(10).'<!--'.chr(10).implode(chr(10),$allFilesToComment).chr(10).'-->'.chr(10);
-				} else return 'No PHP files found in path: "'.$path.'"';
-			} else return 'ERROR: Local extension not found: "'.$this->pObj->MOD_SETTINGS['extSel'].'"';
+				} else return $this->LANG->getLL('err_no_phpfiles_found').': "'.$path.'"';
+			} else return $this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"';
 		}
 	}
 
@@ -108,10 +108,10 @@ class tx_t3dev_basicsModule {
 					$currentFile = $path.$this->pObj->MOD_SETTINGS['phpFile'];
 					if (@is_file($currentFile))    {
 						return array($currentFile);
-					} else return 'Currently selected PHP file was not found: '.$this->pObj->MOD_SETTINGS['phpFile'];
-				} else return 'You must select a file from the selector box above.';
-			} else return 'ERROR: Local extension not found: "'.$this->pObj->MOD_SETTINGS['extSel'].'"';
-		} else return 'You must select an extension from the selector box above.';
+					} else return $this->LANG->getLL('err_selected_file_not_found').': '.$this->pObj->MOD_SETTINGS['phpFile'];
+				} else return $this->LANG->getLL('err_no_file_selected');
+			} else return $this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"';
+		} else return $this->LANG->getLL('err_no_extension_selected');
 	}
 
 	/**

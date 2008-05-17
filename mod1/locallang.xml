@@ -19,6 +19,15 @@
 			<label index="ext_local">local extensions</label>
 			<label index="ext_global">global extensions</label>
 			<label index="ext_system">system extensions</label>
+			<label index="err_selected_file_not_found">Currently selected PHP file was not found</label>
+			<label index="err_no_file_selected">You must select a file from the selector box above</label>
+			<label index="err_extension_not_found">ERROR: extension not found</label>
+			<label index="err_no_extension_selected">You must select an extension from the selector box above</label>
+			<label index="err_no_phpfiles_found">No PHP files found in path</label>
+			<label index="err_directory_notreadable">ERROR: Could not read directories from path</label>
+			<label index="err_no_extension_path">ERROR: No extensions path</label>
+			<label index="err_"></label>
+			<label index="err_"></label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">T3dev</label>
@@ -34,6 +43,13 @@
 			<label index="ext_local">lokale Extensions</label>
 			<label index="ext_global">globale Extensions</label>
 			<label index="ext_system">System-Extensions</label>
+			<label index="err_selected_file_not_found">Aktuell gewählte PHP-Datei wurde nicht gefunden</label>
+			<label index="err_no_file_selected">Bitte eine Datei aus dem Dropdown oben wählen</label>
+			<label index="err_extension_not_found">Fehler: Extension nicht gefunden</label>
+			<label index="err_no_extension_selected">Bitte eine Extension aus dem Dropdown oben wählen</label>
+			<label index="err_no_phpfiles_found">Keine PHP-Dateien gefunden in Pfad</label>
+			<label index="err_directory_notreadable">Fehler: Verzeichnisse nicht lesbar aus Pfad</label>
+			<label index="err_no_extension_path">Fehler: Kein Extension Pfad</label>
 		</languageKey>
 	</data>
 </T3locallang>

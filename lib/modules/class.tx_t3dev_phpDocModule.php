@@ -42,7 +42,14 @@ class tx_t3dev_phpDocModule {
 
 	public function getContent() {
 		$ret = $this->LANG->getLL($this->moduleId.'Description');
-		$ret .= $this->pObj->doc->section($this->LANG->getLL('label_select_extension').':', $this->basics->getSelectForLocalExtensions().'<br />'.$this->basics->getSelectForExtensionFiles());
+		$ret .= $this->pObj->doc->section(
+			$this->LANG->getLL('label_select_extension').':',
+			$this->basics->getSelectForLocalExtensions()
+		);
+		$ret .= $this->pObj->doc->section(
+			$this->LANG->getLL('label_select_file').':',
+			$this->basics->getSelectForExtensionFiles()
+		);
 		$ret .= $this->pObj->doc->divider(5);
 
 		$phpFile = $this->basics->getCurrentPHPfileName();

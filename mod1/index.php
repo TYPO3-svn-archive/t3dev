@@ -67,6 +67,8 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 		$this->modules = array(
 			0	=> 'tx_t3dev_defaultModule',
 			1	=> 'tx_t3dev_phpDocModule',
+			2	=> 'tx_t3dev_calcModule',
+			3	=> 'tx_t3dev_parserModule',
 		);
 
 		parent::init();

@@ -22,7 +22,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_t3dev_defaultModule {
+require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
+
+class tx_t3dev_defaultModule implements tx_t3dev_moduleInterface {
 	protected $LANG;
 	protected $pObj;
 	protected $moduleId = 'defaultModule';

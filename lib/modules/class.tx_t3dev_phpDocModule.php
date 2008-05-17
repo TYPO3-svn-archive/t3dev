@@ -21,10 +21,11 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+ 
+require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsModule.php');
 
-class tx_t3dev_phpDocModule {
+class tx_t3dev_phpDocModule implements tx_t3dev_moduleInterface {
 	protected $LANG;
 	protected $pObj;
 	protected $moduleId = 'phpDocModule';

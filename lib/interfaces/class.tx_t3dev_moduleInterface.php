@@ -22,24 +22,16 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
+interface tx_t3dev_moduleInterface {
 
-class tx_t3dev_parserModule implements tx_t3dev_moduleInterface {
-	protected $LANG;
-	protected $pObj;
-	protected $moduleId = 'parserModule';
+	/**
+	* getTitle() return the title of this module
+	*/	
+	public function getTitle(); 
 	
-	public function __construct(&$pObj, &$LANG) {
-		$this->pObj = $pObj;
-		$this->LANG = &$LANG;
-	}
-	
-	public function getTitle() {
-		return $this->LANG->getLL($this->moduleId.'Title');
-	}
-	
-	public function getContent() {
-		return $this->LANG->getLL($this->moduleId.'Description');
-	}
+	/**
+	* getContent() return the content of this module
+	*/	
+	public function getContent();
 }
 ?>

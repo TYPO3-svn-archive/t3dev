@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>typo3_src-4.2.0</project>
+		<project>tx_fn_lib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

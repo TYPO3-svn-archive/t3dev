@@ -29,6 +29,8 @@ require_once('conf.php');
 require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 
+require_once(t3lib_extMgm::extPath('fn_lib').'lib/class.tx_fnlib_hookHandler.php');
+
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_calcModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_defaultModule.php');
@@ -99,6 +101,24 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 			'tuneQuotes' => '',
 			'tuneBeautify' => '',
 		);
+		
+		$hookObjectClassname = t3lib_div::makeInstanceClassName('tx_fnlib_hookHandler');
+		$this->hookHandler = new $hookObjectClassname('t3dev/mod1/index.php');
+		
+		// call hookObject->includeModule();
+		// must return path to moduleClass
+		$modulesToInclude = array();
+		$this->hookHandler->call('includeModule', $modulesToInclude, $this);
+		
+		if (count($modulesToInclude)) {
+			for ($i=0; $i<count($modulesToInclude); $i++) {
+				require_once(t3lib_div::getFileAbsFileName($modulesToInclude[$i]));
+			}
+		}
+		
+		// call hookObject->addModule(&$modules, &$pObj);
+		$this->hookHandler->call('addModule', $this->modules, $this);
+		
 		foreach ($this->modules as $k => $v) {
 			$moduleClassname = $this->modules[$k];
 			$module = new $moduleClassname($this, $LANG);

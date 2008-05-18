@@ -35,6 +35,7 @@ require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsMo
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_calcModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_defaultModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_parserModule.php');
+require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_phpInfoModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_phpDocModule.php');
 
 $LANG->includeLLFile('EXT:t3dev/mod1/locallang.xml');
@@ -71,6 +72,7 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 			1	=> 'tx_t3dev_phpDocModule',
 			2	=> 'tx_t3dev_calcModule',
 			3	=> 'tx_t3dev_parserModule',
+			4	=> 'tx_t3dev_phpInfoModule',
 		);
 
 		parent::init();
@@ -186,8 +188,6 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 				'',
 				$this->doc->funcMenu(
 					'',
-					t3lib_BEfunc::getFuncMenu($this->id, 'SET[extScope]', $this->MOD_SETTINGS['extScope'], $this->MOD_MENU['extScope'])
-					.'<br/>'.
 					t3lib_BEfunc::getFuncMenu($this->id, 'SET[function]', $this->MOD_SETTINGS['function'], $this->MOD_MENU['function'])
 				)
 			);

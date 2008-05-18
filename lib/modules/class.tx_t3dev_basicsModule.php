@@ -45,12 +45,21 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	}
 
 	/**
+	 * Generates a selector box with installation types of the extensions
+	 *
+	 * @return    string        Selectorbox
+	 */
+	public function getSelectForExtensionType() {
+		return t3lib_BEfunc::getFuncMenu($this->pObj->id, 'SET[extScope]', $this->pObj->MOD_SETTINGS['extScope'], $this->pObj->MOD_MENU['extScope']);
+	}
+	
+	/**
 	 * Generates a selector box with the extension keys locally available for this install.
 	 * copy from extdeveval extension
 	 *
 	 * @return    string        Selector box for selecting the local extension to work on (or error message)
 	 */
-	function getSelectForLocalExtensions() {
+	public function getSelectForLocalExtensions() {
 		$path = PATH_site.$this->pObj->extensionDir;
 		if (@is_dir($path)) {
 			$dirs = $this->extensionList = t3lib_div::get_dirs($path);
@@ -74,7 +83,7 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	 * @param    string        List of file extensions to select
 	 * @return    string        Selectorbox or error message.
 	 */
-	function getSelectForExtensionFiles($extList='php,inc') {
+	public function getSelectForExtensionFiles($extList='php,inc') {
 		if ($this->pObj->MOD_SETTINGS['extSel']) {
 			$path = PATH_site.$this->pObj->extensionDir.ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path))    {
@@ -102,7 +111,7 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	 * 
 	 * @return    mixed        String: Error message. Array: The PHP-file as first value in key "0" (zero)
 	 */
-	function getCurrentPHPfileName() {
+	public function getCurrentPHPfileName() {
 		if ($this->pObj->MOD_SETTINGS['extSel'])    {
 			$path = PATH_site.$this->pObj->getExtensionDir().ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path))    {
@@ -122,7 +131,7 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	 * 
 	 * @return    string        Returns the directory IF it is also found to be a true directory. Otherwise blank.
 	 */
-	function getCurrentExtDir() {
+	public function getCurrentExtDir() {
 		if ($this->pObj->MOD_SETTINGS['extSel']) {
 			$path = PATH_site.$this->extensionDir.ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path)) {

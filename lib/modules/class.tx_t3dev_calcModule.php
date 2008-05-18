@@ -26,6 +26,9 @@ require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_modul
 
 class tx_t3dev_calcModule implements tx_t3dev_moduleInterface {
 	protected $LANG;
+	/**
+	 * @var t3lib_SCbase
+	 */
 	protected $pObj;
 	protected $moduleId = 'calcModule';
 	
@@ -39,7 +42,60 @@ class tx_t3dev_calcModule implements tx_t3dev_moduleInterface {
 	}
 	
 	public function getContent() {
-		return $this->LANG->getLL($this->moduleId.'Description');
+		$ret = $this->LANG->getLL($this->moduleId.'Description');
+		$ret .= $this->pObj->doc->divider(5);
+		// Time Calculator
+		$data = t3lib_div::_GP('timeCalc');
+		if ( !$data['format'] ) {
+			$data['format'] = 'd-m-Y H:i:s';
+		}
+		if ( !$data['unixTime_toTime'] && !$data['unixTime_toSeconds']) {
+			$data['unixTime']['seconds'] = time();
+			$data['unixTime']['time'] = date($data['format'], $data['unixTime']['seconds']);
+		}
+		if ($data['unixTime_toTime']) {
+			$data['unixTime']['time'] = date($data['format'], $data['unixTime']['seconds']);
+		}
+		if ($data['unixTime_toSeconds']) {
+			$data['unixTime']['seconds'] = strtotime($data['unixTime']['time']);
+		}
+		$title = $this->LANG->getLL($this->moduleId.'TimeTitle');
+		$content = $this->LANG->getLL($this->moduleId.'TimeDescription');
+		$content .= '
+			<input name="timeCalc[unixTime][seconds]" value="'.$data['unixTime']['seconds'].'" size="25" style="" type="text" />
+			<input name="timeCalc[unixTime_toTime]" value="&gt;&gt;" type="submit" />
+			<input name="timeCalc[unixTime_toSeconds]" value="&lt;&lt;" type="submit" />
+			<input name="timeCalc[unixTime][time]" value="'.$data['unixTime']['time'].'" size="25" style="" type="text" />
+		';
+		$ret .= $this->pObj->doc->section($title, $content);
+		$ret .= $this->pObj->doc->divider(5);
+		
+		// Crypt
+		$data = t3lib_div::_GP('crypt');
+		$cryptValue = ($data['input']) ? crypt($data['input']) : '';
+		$title = $this->LANG->getLL($this->moduleId.'CryptTitle');
+		$content = $this->LANG->getLL($this->moduleId.'CryptDescription');
+		$content .= '
+			<input name="crypt[input]" value="'.htmlspecialchars($cryptValue).'" size="50" style="" type="text" />
+			<input name="crypt[crypt]" value="'.htmlspecialchars($this->LANG->getLL($this->moduleId.'CryptTitle')).'" type="submit" />
+		';
+		$ret .= $this->pObj->doc->section($title, $content);
+		$ret .= $this->pObj->doc->divider(5);
+		
+		// MD5-Hash
+		$data = t3lib_div::_GP('md5');
+		$md5Hash = ($data['input']) ? md5($data['input']) : '';
+		$title = $this->LANG->getLL($this->moduleId.'MD5Title');
+		$content = $this->LANG->getLL($this->moduleId.'MD5Description');
+		$content .= '
+			<textarea name="md5[input]" cols="80" rows="5">'.htmlspecialchars($data['input']).'</textarea>
+			<input name="md5[md5]" value="'.htmlspecialchars($this->LANG->getLL($this->moduleId.'MD5Title')).'" type="submit" />
+			<p>'.$this->LANG->getLL('label_md5_hash').': '.$md5Hash.'</p>
+		';
+		$ret .= $this->pObj->doc->section($title, $content);
+		$ret .= $this->pObj->doc->divider(5);
+		
+		return $ret;
 	}
 }
 ?>

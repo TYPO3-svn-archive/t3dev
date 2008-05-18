@@ -21,53 +21,33 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
- 
-require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
-require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsModule.php');
 
-class tx_t3dev_phpDocModule implements tx_t3dev_moduleInterface {
+require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
+
+class tx_t3dev_phpInfoModule implements tx_t3dev_moduleInterface {
 	protected $LANG;
 	protected $pObj;
-	protected $moduleId = 'phpDocModule';
-	protected $basics;
-
+	protected $moduleId = 'phpInfoModule';
+	
 	public function __construct(&$pObj, &$LANG) {
 		$this->pObj = $pObj;
 		$this->LANG = &$LANG;
-		$this->basics = new tx_t3dev_basicsModule($pObj, $LANG);
 	}
-
+	
 	public function getTitle() {
 		return $this->LANG->getLL($this->moduleId.'Title');
 	}
-
+	
 	public function getContent() {
 		$ret = $this->LANG->getLL($this->moduleId.'Description');
-
-		$ret .= $this->pObj->doc->section(
-			$this->LANG->getLL('label_select_extensiontype').':',
-			$this->basics->getSelectForExtensionType()
-		);
-		$ret .= $this->pObj->doc->section(
-			$this->LANG->getLL('label_select_extension').':',
-			$this->basics->getSelectForLocalExtensions()
-		);
-		$ret .= $this->pObj->doc->section(
-			$this->LANG->getLL('label_select_file').':',
-			$this->basics->getSelectForExtensionFiles()
-		);
-		$ret .= $this->pObj->doc->divider(5);
-
-		$phpFile = $this->basics->getCurrentPHPfileName();
-		if (is_array($phpFile)) {
-			require_once(t3lib_extMgm::extPath('t3dev').'lib/external/class.tx_extdeveval_phpdoc.php');
-			$inst = t3lib_div::makeInstance('tx_extdeveval_phpdoc');
-			$content = $inst->analyseFile($phpFile[0], $this->pObj->getExtensionDir());
-
-			$ret .= $this->pObj->doc->section($this->LANG->getLL('label_file').' : '.basename(current($phpFile)),$content,0,1);
-		} else {
-			$ret .= $this->pObj->doc->section('NOTICE', $phpFile, 0, 1, 2);
-		}
+		ob_start();
+		phpinfo();
+		$phpinfo = ob_get_contents();
+		ob_end_clean();
+		$reg=array();
+		ereg('<body[^>]*>(.*)</body>',$phpinfo,$reg);
+		$ret .= $reg[1];
+		
 		return $ret;
 	}
 }

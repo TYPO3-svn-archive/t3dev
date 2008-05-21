@@ -32,11 +32,8 @@ require_once($BACK_PATH.'template.php');
 require_once(t3lib_extMgm::extPath('fn_lib').'lib/class.tx_fnlib_hookHandler.php');
 
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsModule.php');
-require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_calcModule.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_defaultModule.php');
-require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_parserModule.php');
-require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_phpInfoModule.php');
-require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_phpDocModule.php');
+require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_flexformModule.php');
 
 $LANG->includeLLFile('EXT:t3dev/mod1/locallang.xml');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
@@ -69,10 +66,7 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 
 		$this->modules = array(
 			0	=> 'tx_t3dev_defaultModule',
-			1	=> 'tx_t3dev_phpDocModule',
-			2	=> 'tx_t3dev_calcModule',
-			3	=> 'tx_t3dev_parserModule',
-			4	=> 'tx_t3dev_phpInfoModule',
+			1	=> 'tx_t3dev_flexformModule',
 		);
 
 		parent::init();
@@ -98,7 +92,7 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 				'S' => $LANG->getLL('ext_system'),
 			),
 			'extSel' => '',
-			'phpFile' => '',
+			'file' => '',
 			'tuneXHTML' => '',
 			'tuneQuotes' => '',
 			'tuneBeautify' => '',
@@ -108,7 +102,6 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 		$this->hookHandler = new $hookObjectClassname('t3dev/mod1/index.php');
 		
 		// call hookObject->includeModule();
-		// must return path to moduleClass
 		$modulesToInclude = array();
 		$this->hookHandler->call('includeModule', $modulesToInclude, $this);
 		

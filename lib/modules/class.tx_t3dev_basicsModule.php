@@ -72,8 +72,8 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 					$opt[]='<option value="'.htmlspecialchars($dirName).'"'.$selVal.'>'.htmlspecialchars($dirName).'</option>';
 				}
 				return '<select name="SET[extSel]" onchange="jumpToUrl(\'?SET[extSel]=\'+this.options[this.selectedIndex].value,this);">'.implode('',$opt).'</select>';
-			} else return $this->LANG->getLL('err_directory_notreadable').': "'.$path.'"';
-		} else return $this->LANG->getLL('err_no_extension_path').': "'.$path.'"';
+			} else return $this->pObj->doc->rfw($this->LANG->getLL('err_directory_notreadable').': "'.$path.'"');
+		} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_extension_path').': "'.$path.'"');
 	}
 
 	/**
@@ -94,35 +94,35 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 					$allFilesToComment=array();
 					$opt[]='<option value="">[ '.$this->LANG->getLL('label_select_file').' ]</option>';
 					foreach($phpFiles as $phpName)        {
-						$selVal = strcmp($phpName,$this->pObj->MOD_SETTINGS['phpFile']) ? '' : ' selected="selected"';
+						$selVal = strcmp($phpName,$this->pObj->MOD_SETTINGS['file']) ? '' : ' selected="selected"';
 						$opt[]='<option value="'.htmlspecialchars($phpName).'"'.$selVal.'>'.htmlspecialchars($phpName).'</option>';
 						$allFilesToComment[]=htmlspecialchars($phpName);
 					}
-					return '<select name="SET[phpFile]" onchange="jumpToUrl(\'?SET[phpFile]=\'+this.options[this.selectedIndex].value,this);">'.implode('',$opt).'</select>'.
+					return '<select name="SET[file]" onchange="jumpToUrl(\'?SET[file]=\'+this.options[this.selectedIndex].value,this);">'.implode('',$opt).'</select>'.
 					chr(10).chr(10).'<!--'.chr(10).implode(chr(10),$allFilesToComment).chr(10).'-->'.chr(10);
-				} else return $this->LANG->getLL('err_no_phpfiles_found').': "'.$path.'"';
-			} else return $this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"';
+				} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_phpfiles_found').': "'.$path.'"');
+			} else return $this->pObj->doc->rfw($this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"');
 		}
 	}
 
 	/**
-	 * Returns the currently selected PHP file name according to the selectors with field names SET[extSel] and SET[phpFile]
+	 * Returns the currently selected PHP file name according to the selectors with field names SET[extSel] and SET[file]
 	 * copy from extdeveval extension
 	 * 
 	 * @return    mixed        String: Error message. Array: The PHP-file as first value in key "0" (zero)
 	 */
-	public function getCurrentPHPfileName() {
+	public function getCurrentFileName() {
 		if ($this->pObj->MOD_SETTINGS['extSel'])    {
 			$path = PATH_site.$this->pObj->getExtensionDir().ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path))    {
-				if ($this->pObj->MOD_SETTINGS['phpFile'])    {
-					$currentFile = $path.$this->pObj->MOD_SETTINGS['phpFile'];
+				if ($this->pObj->MOD_SETTINGS['file'])    {
+					$currentFile = $path.$this->pObj->MOD_SETTINGS['file'];
 					if (@is_file($currentFile))    {
 						return array($currentFile);
-					} else return $this->LANG->getLL('err_selected_file_not_found').': '.$this->pObj->MOD_SETTINGS['phpFile'];
-				} else return $this->LANG->getLL('err_no_file_selected');
-			} else return $this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"';
-		} else return $this->LANG->getLL('err_no_extension_selected');
+					} else return $this->pObj->doc->rfw($this->LANG->getLL('err_selected_file_not_found').': '.$this->pObj->MOD_SETTINGS['file']);
+				} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_file_selected'));
+			} else return $this->pObj->doc->rfw($this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"');
+		} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_extension_selected'));
 	}
 
 	/**
@@ -133,7 +133,7 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	 */
 	public function getCurrentExtDir() {
 		if ($this->pObj->MOD_SETTINGS['extSel']) {
-			$path = PATH_site.$this->extensionDir.ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
+			$path = PATH_site.$this->pObj->extensionDir.ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path)) {
 				return $path;
 			}

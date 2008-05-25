@@ -22,6 +22,11 @@
 			<label index="label_md5_hash">MD5-Hash</label>
 			<label index="label_new_file">create new file</label>
 			<label index="label_create_file">create new file</label>
+			<label index="label_ffgen">Flexform Generator</label>
+			<label index="label_sheets">sheets</label>
+			<label index="label_new_sheet">new sheet</label>
+			<label index="label_new_field">new field</label>
+			<label index="label_submit">submit</label>
 			<label index="ext_local">local extensions</label>
 			<label index="ext_global">global extensions</label>
 			<label index="ext_system">system extensions</label>
@@ -52,6 +57,11 @@
 			<label index="label_md5_hash">MD5-Hash</label>
 			<label index="label_new_file">Neue Datei anlegen</label>
 			<label index="label_create_file">Datei neu anlegen</label>
+			<label index="label_ffgen">Flexform Generator</label>
+			<label index="label_sheets">Reiter</label>
+			<label index="label_new_sheet">Neuer Reiter</label>
+			<label index="label_new_field">Neues Feld</label>
+			<label index="label_submit">absenden</label>
 			<label index="ext_local">lokale Extensions</label>
 			<label index="ext_global">globale Extensions</label>
 			<label index="ext_system">System-Extensions</label>

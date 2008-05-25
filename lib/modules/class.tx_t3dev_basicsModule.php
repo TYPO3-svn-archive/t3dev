@@ -139,5 +139,9 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 			}
 		}
 	}
+
+	public function getCurrentExtKey() {
+		return $this->pObj->MOD_SETTINGS['extSel'];
+	}
 }
 ?>

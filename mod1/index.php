@@ -107,6 +107,7 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 		
 		if (count($modulesToInclude)) {
 			for ($i=0; $i<count($modulesToInclude); $i++) {
+				debug($modulesToInclude[$i]);
 				require_once(t3lib_div::getFileAbsFileName($modulesToInclude[$i]));
 			}
 		}

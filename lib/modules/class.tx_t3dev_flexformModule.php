@@ -24,6 +24,7 @@
 
 require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
 require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsModule.php');
+require_once(t3lib_extMgm::extPath('t3dev').'lib/class.tx_t3dev_flexform.php');
 
 class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 	protected $LANG;
@@ -70,11 +71,18 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 		$selectedFile = $this->basics->getCurrentFileName();
 		if (is_array($selectedFile)) {
 			$ret .= $this->pObj->doc->section($this->LANG->getLL('label_selected_file'), $selectedFile[0]);
+			$ret .= $this->pObj->doc->divider(5);
+
+			$flexformClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexform');
+			$flexform = new $flexformClassname($this->pObj, $this->LANG, $this->basics->getCurrentExtKey());
+			$flexform->setFilename($selectedFile[0]);
+			$flexform->init();
+			$ret .= $flexform->getContent();
 		} else {
 			$ret .= $this->pObj->doc->section($this->LANG->getLL('label_selected_file'), $selectedFile);
 			$ret .= $this->getCreateNewFileBox();
+			$ret .= $this->pObj->doc->divider(5);
 		}
-		$ret .= $this->pObj->doc->divider(5);
 		return $ret;
 	}
 	
@@ -89,8 +97,36 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 	}
 	
 	protected function createNewFileAction() {
-		
+		$settings = t3lib_div::_GP('SET');
+		$newFileName = $this->basics->getCurrentExtDir() . $settings['newFileName'];
+		$isDir = false;
+		if (is_dir(dirname($newFileName))) {
+			$isDir = true;
+		} elseif ((!is_dir(dirname($newFileName)) && (substr($newFileName,0,1) == '/'))) {
+			if (t3lib_div::mkdir(dirname($newFileName))) {
+				$isDir = true;
+			}
+		} 
+		if ($isDir) {
+			$basicFlexform = '<T3DataStructure>
+ <meta>
+       <langDisable>1</langDisable>
+ </meta>
+ <sheets>
+  <sDEF>
+   <ROOT>
+    <TCEforms>
+     <sheetTitle>LLL:EXT:'.$this->basics->getCurrentExtKey().'/locallang_db.php:tt_content.pi_flexform.sheet_general</sheetTitle>
+    </TCEforms>
+    <type>array</type>
+    <el>
+    </el>
+   </ROOT>
+  </sDEF>
+ </sheets>
+</T3DataStructure>';
+			t3lib_div::writeFile($newFileName, $basicFlexform);
+		}
 	}
-	
 }
 ?>

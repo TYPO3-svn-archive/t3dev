@@ -47,7 +47,7 @@ class tx_t3dev_flexform {
 	
 	public function init() {
 		$this->flexform = t3lib_div::getURL($this->filename);
-		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure', true);
+		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure');
 		debug($this->flexformArray, 'FlexfromArray', '', '', 10);
 		
 		if (strlen($this->request['newSheet'])) {
@@ -88,7 +88,7 @@ class tx_t3dev_flexform {
 		);
 		$this->save();
 		$this->flexform = t3lib_div::getURL($this->filename);
-		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure', true);
+		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure');
 	}
 	
 	protected function createNewField($field) {
@@ -109,7 +109,7 @@ class tx_t3dev_flexform {
 	}
 	
 	protected function save() {
-		$content = t3lib_div::array2xml($this->flexformArray);
+		$content = t3lib_div::array2xml($this->flexformArray, '', 0, 'T3DataStructure', 1);
 		t3lib_div::writeFile($this->filename, $content);
 	}
 	

@@ -22,6 +22,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('t3dev').'lib/class.tx_t3dev_flexformField.php');
+
 class tx_t3dev_flexform {
 	protected $LANG;
 	/**
@@ -116,6 +118,7 @@ class tx_t3dev_flexform {
 	protected function getSheetSelector() {
 		$ret .= '<select name="ffgen[sheet]" onchange="jumpToUrl(\'?ffgen[sheet]=\'+this.options[this.selectedIndex].value,this);">';
 		foreach ($this->flexformArray['sheets'] as $k => $v) {
+			$sel = '';
 			if ($this->request['sheet'] == $k) {
 				$sel = ' selected="selected"';
 			}
@@ -142,8 +145,14 @@ class tx_t3dev_flexform {
 	
 	protected function getFieldsForCurrentSheet() {
 		$currentFields = $this->flexformArray['sheets'][$this->request['sheet']]['ROOT']['el'];
-		if (is_array($currentFields)) {
-			return 'fields';
+		if (is_array($currentFields) && (count($currentFields) > 0)) {
+			//$flexformFieldClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexformField');
+			foreach ($currentFields as $k => $v) {
+				$flexformField = new tx_t3dev_flexformField($this->pObj, $this->LANG, $k, $currentFields[$k]);
+				$flexformField->init();
+				$ret .= $flexformField->getFieldOverview();
+			}
+			return $ret;
 		} else {
 			return 'no fields';
 		}

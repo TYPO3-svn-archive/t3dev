@@ -1,28 +1,48 @@
-<phparray>
-	<meta type="array">
-		<langDisable>1</langDisable>
-	</meta>
-	<sheets type="array">
-		<sDEF type="array">
-			<ROOT type="array">
-				<TCEforms type="array">
-					<sheetTitle>LLL:EXT:t3dev/locallang_db.php:tt_content.pi_flexform.sheet_general</sheetTitle>
-				</TCEforms>
-				<type>array</type>
-				<el>
-     </el>
-			</ROOT>
-		</sDEF>
-		<test type="array">
-			<ROOT type="array">
-				<TCEforms type="array">
-					<sheetTitle>LLL:EXT:t3dev/locallang_db.php:tt_content.pi_flexform.sheet_test</sheetTitle>
-				</TCEforms>
-				<type>array</type>
-				<el type="array">
-				</el>
-			</ROOT>
-		</test>
-	</sheets>
-	<_DOCUMENT_TAG>phparray</_DOCUMENT_TAG>
-</phparray>
+<T3DataStructure>
+ <meta type="array">
+  <langDisable>1</langDisable>
+ </meta>
+ <sheets type="array">
+  <sDEF type="array">
+   <ROOT type="array">
+    <TCEforms type="array">
+     <sheetTitle>LLL:EXT:t3dev/locallang_db.php:tt_content.pi_flexform.sheet_general</sheetTitle>
+    </TCEforms>
+    <type>array</type>
+    <el type="array">
+     <view_count type="array">
+      <TCEforms type="array">
+       <label>LLL:EXT:t3dev/locallang_db.php:tt_content.pi_flexform.view_count</label>
+       <config type="array">
+        <type>input</type>
+        <eval>int</eval>
+        <size>4</size>
+        <default>5</default>
+       </config>
+      </TCEforms>
+     </view_count>
+    </el>
+   </ROOT>
+  </sDEF>
+  <test type="array">
+   <ROOT type="array">
+    <TCEforms type="array">
+     <sheetTitle>LLL:EXT:t3dev/locallang_db.php:tt_content.pi_flexform.sheet_test</sheetTitle>
+    </TCEforms>
+    <type>array</type>
+    <el type="array">
+    </el>
+   </ROOT>
+  </test>
+  <test2 type="array">
+   <ROOT type="array">
+    <TCEforms type="array">
+     <sheetTitle>LLL:EXT:t3dev/locallang_db.php:tt_content.pi_flexform.sheet_test2</sheetTitle>
+    </TCEforms>
+    <type>array</type>
+    <el type="array">
+    </el>
+   </ROOT>
+  </test2>
+ </sheets>
+</T3DataStructure>

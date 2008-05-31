@@ -42,6 +42,10 @@ class tx_t3dev_additionalToolbarIcons implements backend_toolbarItem {
 	 * @return  boolean  true if user has access, false if not
 	 */
 	public function checkAccess() {
+		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['t3dev']);
+		if ($extConf['linkmenu_adminonly'] && !$GLOBALS['BE_USER']->user['admin']) {
+			return false;
+		}
 		return true;
 	}
 

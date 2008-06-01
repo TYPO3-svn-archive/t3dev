@@ -27,9 +27,13 @@ require_once(t3lib_extMgm::extPath('t3dev').'lib/class.tx_t3dev_flexformField.ph
 class tx_t3dev_flexform {
 	protected $LANG;
 	/**
-	 * @var t3lib_SCbase
+	 * @var tx_t3dev_flexformModule
 	 */
 	protected $pObj;
+	/**
+	 * @var t3lib_SCbase
+	 */
+	protected $pMod;
 	protected $extkey;
 	protected $filename;
 	protected $flexform;
@@ -42,9 +46,11 @@ class tx_t3dev_flexform {
 	
 	public function __construct(&$pObj, &$LANG, $extkey) {
 		$this->pObj = $pObj;
+		$this->pMod = $pObj->getPObj();
 		$this->LANG = &$LANG;
 		$this->extkey = $extkey;
 		$this->request = t3lib_div::_GP('ffgen');
+		debug($this->request, '$this->request');
 	}
 	
 	public function init() {
@@ -59,18 +65,27 @@ class tx_t3dev_flexform {
 		if (strlen($this->request['newField'])) {
 			$this->createNewField($this->request['newField']);
 		}
+
+		if (strlen($this->request['update'])) {
+			$this->updateFields($this->request['sheet'], $this->request['sheetData'][$this->request['sheet']]);
+		}
+	}
+	
+	public function getPMod() {
+		return $this->pMod;
 	}
 	
 	public function getContent() {
 		$ret .= $this->getSheetSelector();
 		$ret .= $this->getNewSheetField();
 		$ret .= $this->getSubmitButton();
-		$ret .= $this->pObj->doc->divider(5);
+		$ret .= $this->pMod->doc->divider(5);
 		$ret .= $this->getNewFieldSelector();
 		$ret .= $this->getFieldsForCurrentSheet();
-		$ret .= $this->pObj->doc->divider(5);
+		$ret .= $this->getUpdateButton();
+		$ret .= $this->pMod->doc->divider(5);
 		
-		return $this->pObj->doc->section($this->LANG->getLL('label_ffgen'), $ret);
+		return $this->pMod->doc->section($this->LANG->getLL('label_ffgen'), $ret);
 	}
 
 	public function setFilename($filename) {
@@ -94,20 +109,22 @@ class tx_t3dev_flexform {
 	}
 	
 	protected function createNewField($field) {
-		$newField = trim($field);
-/*		$this->flexformArray['sheets'][$newSheet] = array(
-			'ROOT' => array(
-				'TCEforms' => array(
-					'sheetTitle' => 'LLL:EXT:'.$this->extkey.'/locallang_db.php:tt_content.pi_flexform.sheet_'.$newSheet
-				),
-				'type' => 'array',
-				'el' => array()
-			)
-		);
-*/
+		$newField = new tx_t3dev_flexformField($this->pObj, $this->LANG, '', $config);
+		$newField->setType($field);
+		$this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'][$newField->getName()] = $newField->asArray();
 		$this->save();
-		$this->flexform = t3lib_div::getURL($this->filename);
-		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure', true);
+	}
+	
+	protected function updateFields($sheet, $data) {
+		foreach ($data as $k => $v) {
+			debug($data[$k]['TCEforms']['config']);
+			$name = $data[$k]['TCEforms']['config']['name'];
+			unset($data[$k]['TCEforms']['config']['name']);
+			$newField = new tx_t3dev_flexformField($this->pObj, $this->LANG, $name, $data[$k]);
+			unset($this->flexformArray['sheets'][$sheet]['ROOT']['el'][$k]);
+			$this->flexformArray['sheets'][$sheet]['ROOT']['el'][$newField->getName()] = $newField->asArray();
+		}
+		$this->save();
 	}
 	
 	protected function save() {
@@ -118,19 +135,26 @@ class tx_t3dev_flexform {
 	protected function getSheetSelector() {
 		$ret .= '<select name="ffgen[sheet]" onchange="jumpToUrl(\'?ffgen[sheet]=\'+this.options[this.selectedIndex].value,this);">';
 		foreach ($this->flexformArray['sheets'] as $k => $v) {
+			if (!strlen($this->request['sheet'])) {
+				$this->request['sheet'] = $this->pObj->getFromSession('sheet');
+			}
+			if (!strlen($this->request['sheet'])) {
+				$this->request['sheet'] = $k;
+			}
 			$sel = '';
 			if ($this->request['sheet'] == $k) {
 				$sel = ' selected="selected"';
+				$this->pObj->setToSession('sheet', $this->request['sheet']);
 			}
 			$ret .= '<option value="'.$k.'"'.$sel.'>'.$k.'</option>';
 		}
 		$ret .= '</select>';
-		return $this->pObj->doc->funcMenu($this->LANG->getLL('label_sheets'), $ret);
+		return $this->pMod->doc->funcMenu($this->LANG->getLL('label_sheets'), $ret);
 	}
 	
 	protected function getNewSheetField() {
 		$ret .= '<input type="text" name="ffgen[newSheet]" value="" />';
-		return $this->pObj->doc->funcMenu($this->LANG->getLL('label_new_sheet'), $ret);
+		return $this->pMod->doc->funcMenu($this->LANG->getLL('label_new_sheet'), $ret);
 	}
 		
 	protected function getNewFieldSelector() {
@@ -140,11 +164,11 @@ class tx_t3dev_flexform {
 			$ret .= '<option value="'.$k.'">'.$this->fieldTypes[$k].'</option>';
 		}
 		$ret .= '</select>';
-		return $this->pObj->doc->funcMenu($this->LANG->getLL('label_new_field'), $ret);
+		return $this->pMod->doc->funcMenu($this->LANG->getLL('label_new_field'), $ret);
 	}
 	
 	protected function getFieldsForCurrentSheet() {
-		$currentFields = $this->flexformArray['sheets'][$this->request['sheet']]['ROOT']['el'];
+		$currentFields = $this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'];
 		if (is_array($currentFields) && (count($currentFields) > 0)) {
 			//$flexformFieldClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexformField');
 			foreach ($currentFields as $k => $v) {
@@ -160,7 +184,12 @@ class tx_t3dev_flexform {
 	
 	protected function getSubmitButton() {
 		$ret .= '<input type="submit" name="ffgen[submit]" value="'.$this->LANG->getLL('label_submit').'" />';
-		return $this->pObj->doc->funcMenu('', $ret);
+		return $this->pMod->doc->funcMenu('', $ret);
+	}
+	
+	protected function getUpdateButton() {
+		$ret .= '<input type="submit" name="ffgen[update]" value="'.$this->LANG->getLL('label_update').'" />';
+		return $this->pMod->doc->funcMenu('', $ret);
 	}
 }
 ?>

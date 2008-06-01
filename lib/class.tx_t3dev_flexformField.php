@@ -25,16 +25,78 @@
 class tx_t3dev_flexformField {
 	protected $LANG;
 	/**
-	 * @var t3lib_SCbase
+	 * @var tx_t3dev_flexformModule
 	 */
 	protected $pObj;
+	/**
+	 * @var t3lib_SCbase
+	 */
+	protected $pMod;
 	protected $name;
 	protected $config;
+	protected $configOptions = array(
+		'name' 				=> 'text',
+		'eval' 				=> array('date', 'time', 'timesec', 'datetime', 'year', 'int', 'int+', 'double2', 'alphanum', 'upper', 'upper', 'lower'),
+		'size' 				=> 'text',
+		'max' 				=> 'text',
+		'required'			=> 'check',
+		'check'				=> 'check',
+		'stripspace'		=> 'check',
+		'pass'				=> 'check',
+		'md5'				=> 'check',
+		'unique'			=> 'radio|G|L||',
+		'wiz_color'			=> 'check',
+		'wiz_link'			=> 'check',
+		'wiz_example'		=> 'check',
+		'wiz_addrec'		=> 'check',
+		'wiz_listrec'		=> 'check',
+		'wiz_editrec'		=> 'check',
+		'cols' 				=> 'text',
+		'rows' 				=> 'text',
+		'rte'				=> 'select|tt_content|basic|moderate|none|custom',
+		'rte_fullscreen'	=> 'check',
+		'check_default'		=> 'check',
+		'numberBoxes'		=> 'text',
+		'select_items'		=> 'text',
+		'select_icons'		=> 'check',
+		'default'			=> 'text',
+		'relations'			=> 'text',
+		'relations_selsize'	=> 'text',
+		'relations_mm'		=> 'check',
+		'rel_table'			=> 'select|tables',
+		'rel_type'			=> 'select|group|select|select_cur|select_root|select_storage',
+		'rel_dummyitem'		=> 'check',
+		'files_type'		=> 'select|images|webimages|all',
+		'files'				=> 'text',
+		'max_filesize'		=> 'text',
+		'files_selsize'		=> 'text',
+		'files_thumbs'		=> 'check',
+	);
+	protected $fieldConfigs = array(
+		'input'				=> array('name', 'type', 'size', 'max', 'required', 'default'),
+		'input+'			=> array('name', 'type', 'size', 'max', 'required', 'check', 'eval', 'stripspace', 'pass', 'md5', 'unique', 'wiz_color', 'wiz_link', 'default'),
+		'textarea'			=> array('name', 'type', 'cols', 'rows', 'wiz_example'),
+		'textarea_rte'		=> array('name', 'type', 'rte', 'rte_fullscreen'),
+		'textarea_nowrap'	=> array('name', 'type', 'cols', 'rows', 'wiz_example'),
+		'check'				=> array('name', 'type', 'check_default'),
+		'check_multi'		=> array('name', 'type', 'numberBoxes'),
+		'link'				=> array('name', 'type'),
+		'date'				=> array('name', 'type'),
+		'datetime'			=> array('name', 'type'),
+		'integer'			=> array('name', 'type'),
+		'select'			=> array('name', 'type', 'select_items', 'select_icons', 'relations', 'relations_selsize'),
+		'radio'				=> array('name', 'type', 'select_items'),
+		'rel'				=> array('name', 'type', 'rel_table', 'rel_type', 'rel_dummyitem', 'relations', 'relations_selsize', 'relations_mm', 'wiz_addrec', 'wiz_listrec', 'wit_editrec'),
+		'files'				=> array('name', 'type', 'files_type', 'files', 'max_filesize', 'files_selsize', 'files_thumbs'),
+		'none'				=> array('name', 'type'),
+		'passtrough'		=> array('name', 'type'),
+	);
 	
-	public function __construct(&$pObj, &$LANG, $name, $config) {
+	public function __construct(&$pObj, &$LANG, $name, $config = array()) {
 		$this->pObj = $pObj;
+		$this->pMod = $this->pObj->getPObj();
 		$this->LANG = &$LANG;
-		$this->name = $name;
+		$this->name = (strlen($name)) ? $name : 'a'.substr(md5(time()), 0, 10);
 		$this->config = $config;
 		$this->request = t3lib_div::_GP('ffgen');
 	}
@@ -45,16 +107,66 @@ class tx_t3dev_flexformField {
 	
 	public function getFieldOverview() {
 		$ret = '<table>';
-		foreach ($this->config['TCEforms']['config'] as $k => $v) {
-			$ret .= '
-			<tr>
-				<td>'.$k.'</td>
-				<td>'.$v.'</td>			
-			</tr>';
+		for ($i=0; $i < count($this->fieldConfigs[$this->config['TCEforms']['config']['type']]); $i++) {
+			if ($this->fieldConfigs[$this->config['TCEforms']['config']['type']][$i] == 'name') {
+				$ret .= '
+				<tr>
+					<td>name</td>
+					<td>'.$this->getEditField('name', $this->name).'</td>			
+				</tr>';
+			} else {
+				$ret .= '
+				<tr>
+					<td>'.$this->fieldConfigs[$this->config['TCEforms']['config']['type']][$i].'</td>
+					<td>'.$this->getEditField($this->fieldConfigs[$this->config['TCEforms']['config']['type']][$i], $this->config['TCEforms']['config'][$this->fieldConfigs[$this->config['TCEforms']['config']['type']][$i]]).'</td>			
+				</tr>';
+			}
 		}
 		$ret .= '</table>';
-		return $this->pObj->doc->section($this->name, $ret);
+		$ret .= $this->pMod->doc->divider(2);
+		return $this->pMod->doc->section($this->name, $ret);
 	}
 	
+	protected function getEditField($param, $value) {
+		if ($param == 'type') {
+			$ret = '<select name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
+			foreach ($this->fieldConfigs as $k => $v) {
+				$sel = ($k == $value) ? ' selected="selected"' : '';
+				$ret .= '<option value="'.$k.'"'.$sel.'>'.$k.'</option>';
+			}
+			$ret .= '</select>';
+			return $ret;
+		}
+		if (is_array($this->configOptions[$param])) {
+			$ret = '<select name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
+			for ($i=0; $i<count($this->configOptions[$param]); $i++) {
+				$sel = ($this->configOptions[$param][$i] == $value) ? ' selected="selected"' : '';
+				$ret .= '<option value="'.$this->configOptions[$param][$i].'"'.$sel.'>'.$this->configOptions[$param][$i].'</option>';
+			}
+			$ret .= '</select>';
+			return $ret;
+		} else {
+			switch ($this->configOptions[$param]) {
+				case 'text' :
+					return '<input type="text" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$value.'" />';
+				break;
+				case 'check' :
+					return '<input type="checkbox" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$value.'" />';
+				break;
+			}
+		}
+	}
+	
+	public function getName() {
+		return $this->name;
+	}
+	
+	public function setType($type) {
+		$this->config['TCEforms']['config']['type'] = $type;
+	}
+	
+	public function asArray() {
+		return $this->config;
+	}
 }
 ?>

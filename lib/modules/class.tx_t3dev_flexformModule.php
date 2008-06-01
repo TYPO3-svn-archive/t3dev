@@ -43,6 +43,7 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 		$this->LANG = &$LANG;
 		$basicsModuleClassname = t3lib_div::makeInstanceClassName('tx_t3dev_basicsModule');
 		$this->basics = new $basicsModuleClassname($this->pObj, $this->LANG);
+		$this->sessionData = $GLOBALS['BE_USER']->getSessionData('tx_t3dev_'.$this->moduleId);
 		
 		$action = t3lib_div::_GP('createNewFileAction');
 		if ($action) {
@@ -64,6 +65,19 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 		return $ret;
 	}
 	
+	public function getPObj() {
+		return $this->pObj;
+	}
+	
+	public function setToSession($key, $value) {
+		$this->sessionData[$key] = $value;
+		$GLOBALS['BE_USER']->setAndSaveSessionData('tx_t3dev_'.$this->moduleId, $this->sessionData);
+	}
+	
+	public function getFromSession($key) {
+		return $this->sessionData[$key];
+	}
+	
 	protected function getGlobalConfigHeader() {
 		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_extensiontype'), $this->basics->getSelectForExtensionType());
 		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_extension'), $this->basics->getSelectForLocalExtensions());
@@ -74,7 +88,7 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 			$ret .= $this->pObj->doc->divider(5);
 
 			$flexformClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexform');
-			$flexform = new $flexformClassname($this->pObj, $this->LANG, $this->basics->getCurrentExtKey());
+			$flexform = new $flexformClassname($this, $this->LANG, $this->basics->getCurrentExtKey());
 			$flexform->setFilename($selectedFile[0]);
 			$flexform->init();
 			$ret .= $flexform->getContent();

@@ -36,7 +36,7 @@ class tx_t3dev_flexformField {
 	protected $config;
 	protected $configOptions = array(
 		'name' 				=> 'text',
-		'eval' 				=> array('date', 'time', 'timesec', 'datetime', 'year', 'int', 'int+', 'double2', 'alphanum', 'upper', 'upper', 'lower'),
+		'eval' 				=> 'select||date|time|timesec|datetime|year|int|int+|double2|alphanum|upper|lower',
 		'size' 				=> 'text',
 		'max' 				=> 'text',
 		'required'			=> 'check',
@@ -44,7 +44,7 @@ class tx_t3dev_flexformField {
 		'stripspace'		=> 'check',
 		'pass'				=> 'check',
 		'md5'				=> 'check',
-		'unique'			=> 'radio|G|L||',
+		'unique'			=> 'radio|G|L|',
 		'wiz_color'			=> 'check',
 		'wiz_link'			=> 'check',
 		'wiz_example'		=> 'check',
@@ -146,12 +146,34 @@ class tx_t3dev_flexformField {
 			$ret .= '</select>';
 			return $ret;
 		} else {
-			switch ($this->configOptions[$param]) {
+			$parts = t3lib_div::trimExplode('|', $this->configOptions[$param]);
+			switch ($parts[0]) {
 				case 'text' :
 					return '<input type="text" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$value.'" />';
 				break;
 				case 'check' :
-					return '<input type="checkbox" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$value.'" />';
+					if ($value) {
+						$checked = ' checked="checked"';
+					}
+					return '<input type="checkbox" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="1" '.$checked.'/>';
+				break;
+				case 'select' :
+					$values = t3lib_div::trimExplode('|', $this->configOptions[$param]);
+					$ret = '<select name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
+					for ($i = 1; $i<count($values); $i++) {
+						$sel = ($values[$i] == $value) ? ' selected="selected"' : '';
+						$ret .= '<option value="'.$values[$i].'"'.$sel.'>'.$values[$i].'</option>';
+					}
+					$ret .= '</select>';
+					return $ret;
+				break;
+				case 'radio' :
+					$values = t3lib_div::trimExplode('|', $this->configOptions[$param]);
+					for ($i = 1; $i<count($values); $i++) {
+						$sel = ($values[$i] == $value) ? ' checked="checked"' : '';
+						$ret .= '<input type="radio" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$values[$i].'"'.$sel.'>'.$values[$i].'</option>';
+					}
+					return $ret;
 				break;
 			}
 		}

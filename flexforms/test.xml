@@ -13,10 +13,11 @@
      <view_count type="array">
       <TCEforms type="array">
        <config type="array">
-        <type>input</type>
-        <eval>int</eval>
-        <size>4</size>
-        <default>5</default>
+        <type>input+</type>
+        <size>30</size>
+        <max>30</max>
+        <required>1</required>
+        <default></default>
        </config>
       </TCEforms>
      </view_count>
@@ -24,9 +25,10 @@
       <TCEforms type="array">
        <config type="array">
         <type>rel</type>
-        <eval>int</eval>
-        <size></size>
-        <default></default>
+        <rel_table>tables</rel_table>
+        <rel_type>group</rel_type>
+        <relations></relations>
+        <relations_selsize></relations_selsize>
        </config>
       </TCEforms>
      </test1>
@@ -34,9 +36,10 @@
       <TCEforms type="array">
        <config type="array">
         <type>rel</type>
-        <eval>int</eval>
-        <size></size>
-        <default></default>
+        <rel_table>tables</rel_table>
+        <rel_type>group</rel_type>
+        <relations></relations>
+        <relations_selsize></relations_selsize>
        </config>
       </TCEforms>
      </test2>
@@ -44,9 +47,10 @@
       <TCEforms type="array">
        <config type="array">
         <type>rel</type>
-        <eval>int</eval>
-        <size></size>
-        <default></default>
+        <rel_table>tables</rel_table>
+        <rel_type>group</rel_type>
+        <relations></relations>
+        <relations_selsize></relations_selsize>
        </config>
       </TCEforms>
      </test3>

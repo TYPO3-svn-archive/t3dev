@@ -81,6 +81,7 @@ class tx_t3dev_flexform {
 		$ret .= $this->getSubmitButton();
 		$ret .= $this->pMod->doc->divider(5);
 		$ret .= $this->getNewFieldSelector();
+		$ret .= $this->getUpdateButton();
 		$ret .= $this->getFieldsForCurrentSheet();
 		$ret .= $this->getUpdateButton();
 		$ret .= $this->pMod->doc->divider(5);

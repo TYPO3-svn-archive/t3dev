@@ -172,6 +172,8 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
                             </script>
                         ';
 
+			$this->doc->inDocStylesArray[] = t3lib_div::getURL(t3lib_extMgm::extPath('t3dev'). 'mod1/main.css');
+			
 			$headerSection = $this->doc->getHeader('pages',$this->pageinfo,$this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_pre($this->pageinfo['_thePath'],50);
 
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));

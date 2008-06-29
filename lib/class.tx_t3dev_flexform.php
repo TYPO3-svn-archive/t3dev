@@ -106,6 +106,9 @@ class tx_t3dev_flexform {
 	protected function createNewField($field) {
 		$newField = new tx_t3dev_flexformField($this->pObj, $this->LANG, '', $this->extkey);
 		$newField->setType($field);
+		if (!is_array($this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'])) {
+			$this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'] = array();
+		}
 		$this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'][$newField->getName()] = $newField->asArray();
 		$this->save();
 	}
@@ -128,6 +131,9 @@ class tx_t3dev_flexform {
 	}
 	
 	protected function getSheetSelector() {
+		if (!$this->pObj->getFromSession('sheet')) {
+			$this->pObj->setToSession('sheet', 'sDEF');
+		}
 		$ret .= '<select name="ffgen[sheet]" onchange="jumpToUrl(\'?ffgen[sheet]=\'+this.options[this.selectedIndex].value,this);">';
 		foreach ($this->flexformArray['sheets'] as $k => $v) {
 			if (!strlen($this->request['sheet'])) {

@@ -188,26 +188,24 @@ class tx_t3dev_flexformField {
 	
 	public function getFieldOverview() {
 		debug($this->config, 'conf');
-		$ret = '<table>';
+		$ret = '<div class="t3dev_field_'.$this->config['TCEforms']['config']['type_t3dev'].'">';
 		for ($i=0; $i < count($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']]); $i++) {
 			if ($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'type') {
 				continue;
 			}
 			if ($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'name') {
 				$ret .= '
-				<tr>
-					<td>'.$this->LANG->getLL('label_flexform_param_name').'</td>
-					<td>'.$this->getEditField('name', $this->name).'</td>			
-				</tr>';
+				<label class="label_name">'.$this->LANG->getLL('label_flexform_param_name').'</label>
+					'.$this->getEditField('name', $this->name).'			
+				';
 			} else {
 				$ret .= '
-				<tr>
-					<td>'.$this->LANG->getLL('label_flexform_param_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]).'</td>
-					<td>'.$this->getEditField($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i], $this->config['TCEforms']['config'][$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]]).'</td>			
-				</tr>';
+				<label class="label_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i].'">'.$this->LANG->getLL('label_flexform_param_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]).'</label>
+				'.$this->getEditField($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i], $this->config['TCEforms']['config'][$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]]).'			
+				';
 			}
 		}
-		$ret .= '</table>';
+		$ret .= '</div>';
 		return $this->pMod->doc->section($this->name, $ret);
 	}
 	
@@ -217,7 +215,7 @@ class tx_t3dev_flexformField {
 	
 	public function getEditField($param, $value) {
 		if ($param == 'type_t3dev') {
-			$ret = '<select name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
+			$ret = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
 			foreach ($this->fieldConfigs as $k => $v) {
 				$sel = ($k == $value) ? ' selected="selected"' : '';
 				$ret .= '<option value="'.$k.'"'.$sel.'>'.$this->LANG->getLL('label_flexform_'.$k).'</option>';
@@ -226,7 +224,7 @@ class tx_t3dev_flexformField {
 			return $ret;
 		}
 		if (is_array($this->configOptions[$param])) {
-			$ret = '<select name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
+			$ret = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
 			for ($i=0; $i<count($this->configOptions[$param]); $i++) {
 				$sel = ($this->configOptions[$param][$i] == $value) ? ' selected="selected"' : '';
 				$ret .= '<option value="'.$this->configOptions[$param][$i].'"'.$sel.'>'.$this->LANG->getLL('label_flexform_'.$param.'_'.$this->configOptions[$param][$i]).'</option>';
@@ -237,20 +235,20 @@ class tx_t3dev_flexformField {
 			$parts = t3lib_div::trimExplode('|', $this->configOptions[$param]);
 			switch ($parts[0]) {
 				case 'text' :
-					return '<input type="text" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$value.'" />';
+					return '<input class="field_'.$param.'" type="text" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$value.'" />';
 				break;
 				case 'check' :
 					if ($value) {
 						$checked = ' checked="checked"';
 					}
-					return '<input type="checkbox" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="1" '.$checked.'/>';
+					return '<input class="field_'.$param.'" type="checkbox" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="1" '.$checked.'/>';
 				break;
 				case 'selectm' :
 				case 'select' :
 					$values = t3lib_div::trimExplode('|', $this->configOptions[$param]);
 					$multi  = ($parts[0] == 'selectm') ? ' size="5" multiple="multiple"' : '';
 					$multin = ($parts[0] == 'selectm') ? '[]' : '';
-					$ret = '<select name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']'.$multin.'"'.$multi.'>';
+					$ret = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']'.$multin.'"'.$multi.'>';
 					if ($param == 'rel_table') {
 						$ret .= '<option value=""></option>';
 						$res = $GLOBALS['TYPO3_DB']->sql_query('SHOW TABLES');
@@ -278,7 +276,7 @@ class tx_t3dev_flexformField {
 					$values = t3lib_div::trimExplode('|', $this->configOptions[$param]);
 					for ($i = 1; $i<count($values); $i++) {
 						$sel = ($values[$i] == $value) ? ' checked="checked"' : '';
-						$ret .= '<input type="radio" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$values[$i].'"'.$sel.' /> '.$this->LANG->getLL('label_flexform_'.$param.'_'.$values[$i]) . '<br />';
+						$ret .= '<input class="field_'.$param.'" type="radio" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$values[$i].'"'.$sel.' /> '.$this->LANG->getLL('label_flexform_'.$param.'_'.$values[$i]) . '<br />';
 					}
 					return $ret;
 				break;

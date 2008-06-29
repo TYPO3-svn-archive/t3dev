@@ -42,13 +42,19 @@ var T3devLinksMenu = Class.create({
 			this.positionMenu();
 			this.toolbarItemIcon = $$('#t3dev-links-menu .toolbar-item img')[0].src;
 
-			Event.observe('t3dev-links-menu', 'click', this.toggleMenu)
+			Event.observe('t3dev-links-menu', 'click', this.toggleMenu);
 
 				// observe all clicks on clear cache actions in
 				// the menu
 			$$('#t3dev-links-menu li a').each(function(element) {
 				Event.observe(element, 'click', this.clickItem.bind(this));
 			}.bindAsEventListener(this));
+			
+			$$('#t3dev-links-menu li.section').each(function(element) {
+				Event.observe(element, 'click', this.clickSection.bind(this));
+			}.bindAsEventListener(this));
+			
+			this.closeAllSections();
 		}.bindAsEventListener(this));
 	},
 
@@ -125,6 +131,44 @@ var T3devLinksMenu = Class.create({
 			Event.stop(event);
 		}
 		this.toggleMenu();
+	},
+
+	clickSection: function(event) {
+		if (event) {
+			var id = Event.element(event).id;
+			if (Event.element(event).hasClassName('t3dev-section-open')) {
+				Event.element(event).addClassName('t3dev-section-close');
+				Event.element(event).removeClassName('t3dev-section-open');
+			} else {
+				Event.element(event).addClassName('t3dev-section-open');
+				Event.element(event).removeClassName('t3dev-section-close');
+			}
+			$$('#t3dev-links-menu li.'+id).each(function(element) {
+				if (!element.hasClassName('t3dev-hidden')) {
+					element.addClassName('t3dev-hidden');
+					Effect.Fade(element, {duration: 0.1});
+				} else {
+					element.removeClassName('t3dev-hidden');
+					Effect.Appear(element, {duration: 0.1});
+				}
+			});
+		}
+		Event.stop(event);
+	},
+	
+	closeAllSections: function() {
+		$$('#t3dev-links-menu li.section span').each(function(element) {
+			var id = element.id;
+			if (id && (id != 'section0')) {
+				element.addClassName('t3dev-section-close');
+				$$('#t3dev-links-menu li.'+id).each(function(element) {
+					element.addClassName('t3dev-hidden');
+					Effect.Fade(element, {duration: 0.1});
+				});
+			} else {
+				element.addClassName('t3dev-section-open');
+			}
+		});
 	}
 });
 

@@ -55,20 +55,23 @@ class tx_t3dev_additionalToolbarIcons implements backend_toolbarItem {
  	 * @return      string  the toolbar item rendered as HTML string
 	 */
 	public function render() {
-		// <a class="toolbar-item" href="#"></a>
-                // Render the links from the script options in
-                // TYPO3_CONF_VARS
-                $links=array();
-                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/t3dev/class.tx_t3dev_additionalToolbarIcons.php']['links'])) {
-	                foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/t3dev/class.tx_t3dev_additionalToolbarIcons.php']['links'] as $linkConf)       {
-	                        $aOnClick = "return top.openUrlInWindow('".$linkConf[1]."','ShowAPI');";
+		$sectionCounter = 0;
+		$links=array();
+		$links[] = '<li class="section"><span id="section'.$sectionCounter.'">Info</span></li>';
+		$links[] = '<li class="section'.$sectionCounter.'">&nbsp;TYPO3 '.TYPO3_version.'</li>';
+		$links[] = '<li class="section'.$sectionCounter.'">&nbsp;PHP '.phpversion().'</li>';
+		$links[] = '<li class="section'.$sectionCounter.'">&nbsp;T3dev '.T3dev_version.'</li>';
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/t3dev/class.tx_t3dev_additionalToolbarIcons.php']['links'])) {
+			foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/t3dev/class.tx_t3dev_additionalToolbarIcons.php']['links'] as $linkConf) {
+				$aOnClick = "return top.openUrlInWindow('".$linkConf[1]."','ShowAPI');";
 				if ($linkConf[1] == '#') {
-                                	$links[] = '<li><span>'.htmlspecialchars($linkConf[0]).'</span></li>';
+					$sectionCounter++;
+					$links[] = '<li class="section"><span id="section'.$sectionCounter.'">'.htmlspecialchars($linkConf[0]).'</span></li>';
 				} else {
-                                	$links[] = '<li><a href="'.$linkConf[1].'" onclick="'.$aOnClick.'"><img src="'.$linkConf[2].'" width="16" height="16" title="'.$linkConf[1].'" alt="'.$linkConf[1].'" />'.htmlspecialchars($linkConf[0]).'</a></li>';
+					$links[] = '<li class="section'.$sectionCounter.'"><a href="'.$linkConf[1].'" onclick="'.$aOnClick.'" class="'.$linkConf[3].'"><img src="'.$linkConf[2].'" width="16" height="16" title="'.$linkConf[1].'" alt="'.$linkConf[1].'"/>'.htmlspecialchars($linkConf[0]).'</a></li>';
 				}
-                        }
-                }
+			}
+		}
 		$output = '<a href="#" class="toolbar-item"><img src="'.$this->_REL_PATH.'icons/ico_t3dev.gif" width="54" height="16" title="T3dev" alt="" /></a>';
 		$output .= '<ul class="toolbar-item-menu" style="display: none;">';
                 $output .= implode('',$links);
@@ -89,6 +92,11 @@ class tx_t3dev_additionalToolbarIcons implements backend_toolbarItem {
 $_REL_PATH = t3lib_extMgm::extRelPath('t3dev');
 $TYPO3backend->addJavascriptFile($_REL_PATH.'tx_t3dev_menu.js');
 $TYPO3backend->addCss('
+
+	#t3dev-links-menu li .t3dev-hidden {
+		display: none;
+	}
+
 	#t3dev-links-menu {
 		width:60px;
 	}
@@ -120,10 +128,20 @@ $TYPO3backend->addCss('
 		display: block;
 		font-weight: bold;
 		padding: 2px;
-		text-align: center;
 		border-right: 1px solid;
 		border-bottom: 1px solid;
 		border-color:-moz-use-text-color #ABB2BC rgb(171, 178, 188);
+		cursor: pointer;
+	}
+	
+	#t3dev-links-menu li span.t3dev-section-open {
+		padding-left: 15px;
+		background: #ebebeb url('.$_REL_PATH.'icons/minusonly.gif) no-repeat;
+	}
+
+	#t3dev-links-menu li span.t3dev-section-close {
+		padding-left: 15px;
+		background: #ebebeb url('.$_REL_PATH.'icons/plusonly.gif) no-repeat;
 	}
 
 	#t3dev-links-menu li a {
@@ -134,6 +152,10 @@ $TYPO3backend->addCss('
 		padding-left:3px;
 		text-decoration:none;
 		vertical-align:middle;
+	}
+
+	#t3dev-links-menu li a.highlight {
+		background: #ebebeb;
 	}
 
 	#t3dev-links-menu li a img {

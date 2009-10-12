@@ -25,23 +25,19 @@
 require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
 
 class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
-	protected $LANG;
 	protected $pObj;
 	protected $moduleId = 'basicsModule';
 
-	public function __construct(&$pObj, &$LANG) {
+	public function init(&$pObj) {
 		$this->pObj = $pObj;
-		$this->LANG = &$LANG;
 	}
 
 	public function getTitle() {
-		return $this->LANG->getLL($this->moduleId.'Title');
+		return $GLOBALS['LANG']->getLL($this->moduleId.'Title');
 	}
 
 	public function getContent() {
-		$ret = $this->LANG->getLL($this->moduleId.'Description');
-
-		return $ret;
+		return $GLOBALS['LANG']->getLL($this->moduleId.'Description');
 	}
 
 	/**
@@ -66,14 +62,14 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 			if (is_array($dirs)) {
 				sort($dirs);
 				$opt=array();
-				$opt[]='<option value=""> ['.$this->LANG->getLL('label_select_extension').' ]</option>';
+				$opt[]='<option value=""> ['.$GLOBALS['LANG']->getLL('label_select_extension').' ]</option>';
 				foreach($dirs as $dirName)        {
 					$selVal = strcmp($dirName, $this->pObj->MOD_SETTINGS['extSel']) ? '' : ' selected="selected"';
 					$opt[]='<option value="'.htmlspecialchars($dirName).'"'.$selVal.'>'.htmlspecialchars($dirName).'</option>';
 				}
 				return '<select name="SET[extSel]" onchange="jumpToUrl(\'?SET[extSel]=\'+this.options[this.selectedIndex].value,this);">'.implode('',$opt).'</select>';
-			} else return $this->pObj->doc->rfw($this->LANG->getLL('err_directory_notreadable').': "'.$path.'"');
-		} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_extension_path').': "'.$path.'"');
+			} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_directory_notreadable').': "'.$path.'"');
+		} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_no_extension_path').': "'.$path.'"');
 	}
 
 	/**
@@ -85,14 +81,14 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	 */
 	public function getSelectForExtensionFiles($extList='php,inc') {
 		if ($this->pObj->MOD_SETTINGS['extSel']) {
-			$path = PATH_site.$this->pObj->extensionDir.ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
+			$path = PATH_site.$this->pObj->extensionDir.preg_replace('/\/$/','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path))    {
 				$phpFiles = t3lib_div::removePrefixPathFromList(t3lib_div::getAllFilesAndFoldersInPath(array(),$path,$extList,0,($this->pObj->MOD_SETTINGS['extSel']==='_TYPO3'?0:99)),$path);
 				if (is_array($phpFiles))    {
 					sort($phpFiles);
 					$opt=array();
 					$allFilesToComment=array();
-					$opt[]='<option value="">[ '.$this->LANG->getLL('label_select_file').' ]</option>';
+					$opt[]='<option value="">[ '.$GLOBALS['LANG']->getLL('label_select_file').' ]</option>';
 					foreach($phpFiles as $phpName)        {
 						$selVal = strcmp($phpName,$this->pObj->MOD_SETTINGS['file']) ? '' : ' selected="selected"';
 						$opt[]='<option value="'.htmlspecialchars($phpName).'"'.$selVal.'>'.htmlspecialchars($phpName).'</option>';
@@ -100,8 +96,8 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 					}
 					return '<select name="SET[file]" onchange="jumpToUrl(\'?SET[file]=\'+this.options[this.selectedIndex].value,this);">'.implode('',$opt).'</select>'.
 					chr(10).chr(10).'<!--'.chr(10).implode(chr(10),$allFilesToComment).chr(10).'-->'.chr(10);
-				} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_phpfiles_found').': "'.$path.'"');
-			} else return $this->pObj->doc->rfw($this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"');
+				} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_no_phpfiles_found').': "'.$path.'"');
+			} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"');
 		}
 	}
 
@@ -113,16 +109,16 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	 */
 	public function getCurrentFileName() {
 		if ($this->pObj->MOD_SETTINGS['extSel'])    {
-			$path = PATH_site.$this->pObj->getExtensionDir().ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
+			$path = PATH_site.$this->pObj->getExtensionDir().preg_replace('/\/$/','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path))    {
 				if ($this->pObj->MOD_SETTINGS['file'])    {
 					$currentFile = $path.$this->pObj->MOD_SETTINGS['file'];
 					if (@is_file($currentFile))    {
 						return array($currentFile);
-					} else return $this->pObj->doc->rfw($this->LANG->getLL('err_selected_file_not_found').': '.$this->pObj->MOD_SETTINGS['file']);
-				} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_file_selected'));
-			} else return $this->pObj->doc->rfw($this->LANG->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"');
-		} else return $this->pObj->doc->rfw($this->LANG->getLL('err_no_extension_selected'));
+					} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_selected_file_not_found').': '.$this->pObj->MOD_SETTINGS['file']);
+				} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_no_file_selected'));
+			} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_extension_not_found').': "'.$this->pObj->MOD_SETTINGS['extSel'].'"');
+		} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_no_extension_selected'));
 	}
 
 	/**
@@ -133,7 +129,7 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	 */
 	public function getCurrentExtDir() {
 		if ($this->pObj->MOD_SETTINGS['extSel']) {
-			$path = PATH_site.$this->pObj->extensionDir.ereg_replace('\/$','',$this->pObj->MOD_SETTINGS['extSel']).'/';
+			$path = PATH_site.$this->pObj->extensionDir.preg_replace('/\/$/','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path)) {
 				return $path;
 			}

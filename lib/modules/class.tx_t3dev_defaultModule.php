@@ -25,21 +25,19 @@
 require_once(t3lib_extMgm::extPath('t3dev').'lib/interfaces/class.tx_t3dev_moduleInterface.php');
 
 class tx_t3dev_defaultModule implements tx_t3dev_moduleInterface {
-	protected $LANG;
 	protected $pObj;
 	protected $moduleId = 'defaultModule';
 	
-	public function __construct(&$pObj, &$LANG) {
+	public function init(&$pObj) {
 		$this->pObj = $pObj;
-		$this->LANG = &$LANG;
 	}
 	
 	public function getTitle() {
-		return $this->LANG->getLL($this->moduleId.'Title');
+		return $GLOBALS['LANG']->getLL($this->moduleId.'Title');
 	}
 	
 	public function getContent() {
-		return $this->LANG->getLL($this->moduleId.'Description');
+		return $GLOBALS['LANG']->getLL($this->moduleId.'Description');
 	}
 }
 ?>

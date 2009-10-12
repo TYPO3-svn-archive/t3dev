@@ -27,7 +27,6 @@ require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsMo
 require_once(t3lib_extMgm::extPath('t3dev').'lib/class.tx_t3dev_flexform.php');
 
 class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
-	protected $LANG;
 	/**
 	 * @var t3lib_SCbase
 	 */
@@ -38,11 +37,10 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 	protected $basics;
 	protected $moduleId = 'flexformModule';
 	
-	public function __construct(&$pObj, &$LANG) {
+	public function init(&$pObj) {
 		$this->pObj = $pObj;
-		$this->LANG = &$LANG;
-		$basicsModuleClassname = t3lib_div::makeInstanceClassName('tx_t3dev_basicsModule');
-		$this->basics = new $basicsModuleClassname($this->pObj, $this->LANG);
+		$this->basics = t3lib_div::makeInstance('tx_t3dev_basicsModule');
+		$this->basics->init($this->pObj);
 		$this->sessionData = $GLOBALS['BE_USER']->getSessionData('tx_t3dev_'.$this->moduleId);
 		
 		$action = t3lib_div::_GP('createNewFileAction');
@@ -52,11 +50,11 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 	}
 	
 	public function getTitle() {
-		return $this->LANG->getLL($this->moduleId.'Title');
+		return $GLOBALS['LANG']->getLL($this->moduleId.'Title');
 	}
 	
 	public function getContent() {
-		$ret =  $this->LANG->getLL($this->moduleId.'Description');
+		$ret =  $GLOBALS['LANG']->getLL($this->moduleId.'Description');
 		$ret .= $this->pObj->doc->divider(5);
 		$ret .= $this->getGlobalConfigHeader();
 		
@@ -79,21 +77,21 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 	}
 	
 	protected function getGlobalConfigHeader() {
-		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_extensiontype'), $this->basics->getSelectForExtensionType());
-		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_extension'), $this->basics->getSelectForLocalExtensions());
-		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_file'), $this->basics->getSelectForExtensionFiles('xml'));
+		$ret .= $this->pObj->doc->funcMenu($GLOBALS['LANG']->getLL('label_select_extensiontype'), $this->basics->getSelectForExtensionType());
+		$ret .= $this->pObj->doc->funcMenu($GLOBALS['LANG']->getLL('label_select_extension'), $this->basics->getSelectForLocalExtensions());
+		$ret .= $this->pObj->doc->funcMenu($GLOBALS['LANG']->getLL('label_select_file'), $this->basics->getSelectForExtensionFiles('xml'));
 		$selectedFile = $this->basics->getCurrentFileName();
 		if (is_array($selectedFile)) {
-			$ret .= $this->pObj->doc->section($this->LANG->getLL('label_selected_file'), $selectedFile[0]);
+			$ret .= $this->pObj->doc->section($GLOBALS['LANG']->getLL('label_selected_file'), $selectedFile[0]);
 			$ret .= $this->pObj->doc->divider(5);
 
 			$flexformClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexform');
-			$flexform = new $flexformClassname($this, $this->LANG, $this->basics->getCurrentExtKey());
+			$flexform = new $flexformClassname($this, $GLOBALS['LANG'], $this->basics->getCurrentExtKey());
 			$flexform->setFilename($selectedFile[0]);
 			$flexform->init();
 			$ret .= $flexform->getContent();
 		} else {
-			$ret .= $this->pObj->doc->section($this->LANG->getLL('label_selected_file'), $selectedFile);
+			$ret .= $this->pObj->doc->section($GLOBALS['LANG']->getLL('label_selected_file'), $selectedFile);
 			$ret .= $this->getCreateNewFileBox();
 			$ret .= $this->pObj->doc->divider(5);
 		}
@@ -105,9 +103,9 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 		$newFileName = ($this->pObj->MOD_SETTINGS['newFileName']) ? ($this->pObj->MOD_SETTINGS['newFileName']) : 'flexforms/';
 		$content .= '<input type="text" size="60" name="SET[newFileName]" value="'.htmlspecialchars($newFileName).'" />';
 		$content .= $this->pObj->doc->spacer(5);
-		$content .= '<input type="submit" name="createNewFileAction" value="'.htmlspecialchars($this->LANG->getLL('label_create_file')).'" />';
+		$content .= '<input type="submit" name="createNewFileAction" value="'.htmlspecialchars($GLOBALS['LANG']->getLL('label_create_file')).'" />';
 		
-		return $this->pObj->doc->section($this->LANG->getLL('label_new_file'), $content);
+		return $this->pObj->doc->section($GLOBALS['LANG']->getLL('label_new_file'), $content);
 	}
 	
 	protected function createNewFileAction() {

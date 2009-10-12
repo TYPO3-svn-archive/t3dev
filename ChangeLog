@@ -1,6 +1,12 @@
 (add new changes on top of this file)
 project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 
+09-10-12 Stefan Frömken <firma@sfroemken.de>
+	* code updates:
+	* replace makeInstanceClassname with makeInstance
+	* replace of $this->LANG with $GLOBALS['LANG']
+	* replace depricated functions ereg_* with preg_*
+
 08-06-29 Frank Nägler <typo3@naegler.net>
 	* new features:
 	* _ #577: FlexForm-Generator

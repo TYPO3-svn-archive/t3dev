@@ -8,6 +8,7 @@ project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 	* Now only XML-files can be written
 	* Some translation changes
 	* Filecreation will be hidden, if no extension is selected
+	* Set version to 1.2.0
 
 09-10-12 Stefan Frömken <firma@sfroemken.de>
 	* code updates:

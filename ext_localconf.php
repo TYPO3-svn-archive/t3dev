@@ -3,7 +3,7 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 if (TYPO3_MODE=='BE')	{
-	define('T3dev_version', '1.0.99');
+	define('T3dev_version', '1.2.0');
 	$TYPO3_CONF_VARS['typo3/backend.php']['additionalBackendItems'][] = t3lib_extMgm::extPath('t3dev').'class.tx_t3dev_additionalToolbarIcons.php';
 
 	$_REL_PATH = t3lib_extMgm::extRelPath('t3dev');

@@ -1,6 +1,9 @@
 (add new changes on top of this file)
 project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 
+09-10-13 Stefan Frömken <firma@sfroemken.de>
+	* Now you can create new xml-files also on Windows
+
 09-10-12 Stefan Frömken <firma@sfroemken.de>
 	* code updates:
 	* replace makeInstanceClassname with makeInstance

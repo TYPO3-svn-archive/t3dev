@@ -114,28 +114,28 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 		$isDir = false;
 		if (is_dir(dirname($newFileName))) {
 			$isDir = true;
-		} elseif ((!is_dir(dirname($newFileName)) && (substr($newFileName,0,1) == '/'))) {
+		} elseif ((!is_dir(dirname($newFileName)) && (substr($newFileName,0,1) == '/')) || (!is_dir(dirname($newFileName)) && TYPO3_OS == 'WIN')) {
 			if (t3lib_div::mkdir(dirname($newFileName))) {
 				$isDir = true;
 			}
 		} 
-		if ($isDir) {
+		if($isDir) {
 			$basicFlexform = '<T3DataStructure>
- <meta>
-       <langDisable>1</langDisable>
- </meta>
- <sheets>
-  <sDEF>
-   <ROOT>
-    <TCEforms>
-     <sheetTitle>LLL:EXT:'.$this->basics->getCurrentExtKey().'/locallang_db.php:tt_content.pi_flexform.sheet_general</sheetTitle>
-    </TCEforms>
-    <type>array</type>
-    <el>
-    </el>
-   </ROOT>
-  </sDEF>
- </sheets>
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+	<sheets>
+		<sDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:'.$this->basics->getCurrentExtKey().'/locallang_db.php:tt_content.pi_flexform.sheet_general</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+				</el>
+			</ROOT>
+		</sDEF>
+	</sheets>
 </T3DataStructure>';
 			t3lib_div::writeFile($newFileName, $basicFlexform);
 		}

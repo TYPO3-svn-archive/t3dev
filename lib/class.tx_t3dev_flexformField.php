@@ -27,7 +27,6 @@
 */
 
 class tx_t3dev_flexformField {
-	protected $LANG;
 	/**
 	 * @var tx_t3dev_flexformModule
 	 */
@@ -121,10 +120,9 @@ class tx_t3dev_flexformField {
 		'md5'
 	);
 	
-	public function __construct(&$pObj, &$LANG, $name, $extkey, $config = array()) {
+	public function __construct(&$pObj, $name, $extkey, $config = array()) {
 		$this->pObj = $pObj;
 		$this->pMod = $this->pObj->getPObj();
-		$this->LANG = &$LANG;
 		$this->name = (strlen($name)) ? $name : 'a'.substr(md5(time()), 0, 10);
 		$this->extkey = $extkey;
 		$this->config = $config;
@@ -195,12 +193,12 @@ class tx_t3dev_flexformField {
 			}
 			if ($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'name') {
 				$ret .= '
-				<label class="label_name">'.$this->LANG->getLL('label_flexform_param_name').'</label>
+				<label class="label_name">'.$GLOBALS['LANG']->getLL('label_flexform_param_name').'</label>
 					'.$this->getEditField('name', $this->name).'			
 				';
 			} else {
 				$ret .= '
-				<label class="label_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i].'">'.$this->LANG->getLL('label_flexform_param_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]).'</label>
+				<label class="label_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i].'">'.$GLOBALS['LANG']->getLL('label_flexform_param_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]).'</label>
 				'.$this->getEditField($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i], $this->config['TCEforms']['config'][$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]]).'			
 				';
 			}
@@ -218,7 +216,7 @@ class tx_t3dev_flexformField {
 			$ret = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
 			foreach ($this->fieldConfigs as $k => $v) {
 				$sel = ($k == $value) ? ' selected="selected"' : '';
-				$ret .= '<option value="'.$k.'"'.$sel.'>'.$this->LANG->getLL('label_flexform_'.$k).'</option>';
+				$ret .= '<option value="'.$k.'"'.$sel.'>'.$GLOBALS['LANG']->getLL('label_flexform_'.$k).'</option>';
 			}
 			$ret .= '</select>';
 			return $ret;
@@ -227,7 +225,7 @@ class tx_t3dev_flexformField {
 			$ret = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
 			for ($i=0; $i<count($this->configOptions[$param]); $i++) {
 				$sel = ($this->configOptions[$param][$i] == $value) ? ' selected="selected"' : '';
-				$ret .= '<option value="'.$this->configOptions[$param][$i].'"'.$sel.'>'.$this->LANG->getLL('label_flexform_'.$param.'_'.$this->configOptions[$param][$i]).'</option>';
+				$ret .= '<option value="'.$this->configOptions[$param][$i].'"'.$sel.'>'.$GLOBALS['LANG']->getLL('label_flexform_'.$param.'_'.$this->configOptions[$param][$i]).'</option>';
 			}
 			$ret .= '</select>';
 			return $ret;
@@ -266,7 +264,7 @@ class tx_t3dev_flexformField {
 							} else {
 								$sel = ($values[$i] == $value) ? ' selected="selected"' : '';
 							}
-							$ret .= '<option value="'.$values[$i].'"'.$sel.'>'.$this->LANG->getLL('label_flexform_'.$param.'_'.$values[$i]).'</option>';
+							$ret .= '<option value="'.$values[$i].'"'.$sel.'>'.$GLOBALS['LANG']->getLL('label_flexform_'.$param.'_'.$values[$i]).'</option>';
 						}
 					}
 					$ret .= '</select>';
@@ -276,7 +274,7 @@ class tx_t3dev_flexformField {
 					$values = t3lib_div::trimExplode('|', $this->configOptions[$param]);
 					for ($i = 1; $i<count($values); $i++) {
 						$sel = ($values[$i] == $value) ? ' checked="checked"' : '';
-						$ret .= '<input class="field_'.$param.'" type="radio" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$values[$i].'"'.$sel.' /> '.$this->LANG->getLL('label_flexform_'.$param.'_'.$values[$i]) . '<br />';
+						$ret .= '<input class="field_'.$param.'" type="radio" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$values[$i].'"'.$sel.' /> '.$GLOBALS['LANG']->getLL('label_flexform_'.$param.'_'.$values[$i]) . '<br />';
 					}
 					return $ret;
 				break;

@@ -3,6 +3,11 @@ project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 
 09-10-13 Stefan Frömken <firma@sfroemken.de>
 	* Now you can create new xml-files also on Windows
+	* Better Errorhandling on filecreation
+	* Now you also can read XML-files without sheets and sDef
+	* Now only XML-files can be written
+	* Some translation changes
+	* Filecreation will be hidden, if no extension is selected
 
 09-10-12 Stefan Frömken <firma@sfroemken.de>
 	* code updates:

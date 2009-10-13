@@ -111,9 +111,9 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 		if ($this->pObj->MOD_SETTINGS['extSel'])    {
 			$path = PATH_site.$this->pObj->getExtensionDir().preg_replace('/\/$/','',$this->pObj->MOD_SETTINGS['extSel']).'/';
 			if (@is_dir($path))    {
-				if ($this->pObj->MOD_SETTINGS['file'])    {
+				if ($this->pObj->MOD_SETTINGS['file']) {
 					$currentFile = $path.$this->pObj->MOD_SETTINGS['file'];
-					if (@is_file($currentFile))    {
+					if (@is_file($currentFile)) {
 						return array($currentFile);
 					} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_selected_file_not_found').': '.$this->pObj->MOD_SETTINGS['file']);
 				} else return $this->pObj->doc->rfw($GLOBALS['LANG']->getLL('err_no_file_selected'));

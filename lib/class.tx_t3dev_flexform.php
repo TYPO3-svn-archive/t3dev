@@ -49,6 +49,7 @@ class tx_t3dev_flexform {
 
 		$this->flexform = t3lib_div::getURL($this->filename);
 		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure');
+		$this->flexformCorrection();
 		debug($this->flexformArray, 'FlexfromArray', '', '', 10);
 		
 		if (strlen($this->request['newSheet'])) {
@@ -84,16 +85,58 @@ class tx_t3dev_flexform {
 		return $this->pMod->doc->section($GLOBALS['LANG']->getLL('label_ffgen'), $content);
 	}
 
+	/**
+	 * return current filename
+	 *
+	 * @return	void
+	 */
 	public function setFilename($filename) {
 		$this->filename = $filename;
 	}
 	
+	/**
+	 * This function adds the missing sheets-array "sheets->sDEF" if
+	 * there is no sheet defined. This is possible if the user writes
+	 * a flexform with only one sheet 
+	 *
+	 * @return	void
+	 */
+	protected function flexformCorrection() {
+		if(!is_array($this->flexformArray['sheets'])) {
+			if(!is_array($this->flexformArray['ROOT'])) {
+				$this->error = $GLOBALS['LANG']->getLL('err_no_valid_xml_file');
+				return false;
+			}
+			$this->flexformSheet = $this->flexformArray['ROOT'];
+			//If there is no sheet title...set one
+			if(!is_array($this->flexformSheet['TCEforms'])) {
+				$sheetTitle = array(
+					'TCEforms' => array(
+						'sheetTitle' => 'LLL:EXT:'.$this->extkey.'/locallang_db.php:tt_content.pi_flexform.sheet_sDEF'
+					)
+				);
+				$this->flexformSheet = t3lib_div::array_merge(
+					$this->flexformSheet, $sheetTitle
+				);
+			}
+
+			$this->flexformArray['sheets'] = array(
+				'sDEF' => array(
+					'ROOT' => $this->flexformSheet
+				)
+			);
+		}
+		//unset the original Root-Array
+		unset($this->flexformArray['ROOT']);
+		$this->save();
+	}
+	
 	protected function createNewSheet($sheet) {
-		$newSheet = trim($sheet);
-		$this->flexformArray['sheets'][$newSheet] = array(
+		$sheet = trim($sheet);
+		$this->flexformArray['sheets'][$sheet] = array(
 			'ROOT' => array(
 				'TCEforms' => array(
-					'sheetTitle' => 'LLL:EXT:'.$this->extkey.'/locallang_db.php:tt_content.pi_flexform.sheet_'.$newSheet
+					'sheetTitle' => 'LLL:EXT:'.$this->extkey.'/locallang_db.php:tt_content.pi_flexform.sheet_'.$sheet
 				),
 				'type' => 'array',
 				'el' => array()
@@ -126,9 +169,18 @@ class tx_t3dev_flexform {
 		$this->save();
 	}
 	
+	/**
+	 * This function converts our Array back to XML
+	 * Spaces are indented with TAB, so everybody can set spaces in
+	 * his programm on their own.
+	 *
+	 * @return	void
+	 */
 	protected function save() {
-		$content = t3lib_div::array2xml($this->flexformArray, '', 0, 'T3DataStructure', 1);
-		$result = t3lib_div::writeFile($this->filename, $content);
+		$content = t3lib_div::array2xml($this->flexformArray, '', 0, 'T3DataStructure');
+		if(!t3lib_div::writeFile($this->filename, $content)) {
+			$this->error = $GLOBALS['LANG']->getLL('err_file_not_written');
+		}
 	}
 	
 	protected function getSheetSelector() {
@@ -197,7 +249,7 @@ class tx_t3dev_flexform {
 			$this->error = $GLOBALS['LANG']->getLL('err_no_valid_xml_file');
 			return false;
 		}
-
+		
 		if (is_array($currentFields) && (count($currentFields) > 0)) {
 			//$flexformFieldClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexformField');
 			foreach ($currentFields as $k => $v) {

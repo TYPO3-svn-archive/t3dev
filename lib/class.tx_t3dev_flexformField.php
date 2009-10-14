@@ -113,11 +113,29 @@ class tx_t3dev_flexformField {
 		'passthrough'		=> 'passthrough',
 	);
 	
+	//All eval-values I could find in API-Doc 
 	protected $evalValues = array(
 		'required',
 		'trim',
+		'date',
+		'datetime',
+		'time',
+		'timesec',
+		'year',
+		'int',
+		'upper',
+		'lower',
+		'alpha',
+		'num',
+		'alphanum',
+		'alphanum_x',
+		'nospace',
+		'md5',
+		'is_in',
 		'password',
-		'md5'
+		'double2',
+		'unique',
+		'uniqueInPid',
 	);
 	
 	public function __construct(&$pObj, $name, $extkey, $config = array()) {
@@ -129,20 +147,17 @@ class tx_t3dev_flexformField {
 		$this->request = t3lib_div::_GP('ffgen');
 		$this->config['TCEforms']['config']['type'] = $this->fieldTypeMapping[$config['TCEforms']['config']['type_t3dev']];
 
-		// parse eval values
-		if ($this->config['TCEforms']['config']['eval']) {
-			if (is_array($this->config['TCEforms']['config']['eval'])) {
-				$parts = $this->config['TCEforms']['config']['eval'];
-			} else {
-				$parts = t3lib_div::trimExplode(',',$this->config['TCEforms']['config']['eval']);
+		// Check if eval values are allowed. Else delete it
+		if($parts = $this->config['TCEforms']['config']['eval']) {
+			if(!is_array($parts)) {
+				$parts = t3lib_div::trimExplode(',', $parts);
 			}
-			$configOptions = array_keys($this->configOptions);
-			for ($i=0; $i<count($parts); $i++) {
-				if (in_array($parts[$i], $configOptions)) {
-					$this->config['TCEforms']['config'][$parts[$i]] = 1;
+			for($i = 0; $i < count($parts); $i++) {
+				if(t3lib_div::inArray($this->evalValues, $parts[$i])) {
+					$eval[] = $parts[$i];
 				}
 			}
-			$this->config['TCEforms']['config']['eval'] = implode(',', $parts);
+			$this->config['TCEforms']['config']['eval'] = implode(',', $eval);
 		}
 		
 		// parse wizards

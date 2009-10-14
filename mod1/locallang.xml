@@ -129,6 +129,7 @@
 			<label index="err_no_extension_path">ERROR: No extensions path</label>
 			<label index="err_wrong_filepath">ERROR: You typed in a wrong file or file doesn't ends with '.xml'</label>
 			<label index="err_no_valid_xml_file">ERROR: You have selected a non flexform xml-file</label>
+			<label index="err_file_not_written">ERROR: XML-file can't be written to disc</label>
 			<label index="info_file_created">The file was successfully created</label>
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -166,6 +167,7 @@
 			<label index="err_no_extension_path">Fehler: Kein Extension Pfad</label>
 			<label index="err_wrong_filepath">ERROR: Sie haben keine Datei angegeben oder die Datei endet nicht mit '.xml'</label>
 			<label index="err_no_valid_xml_file">ERROR: Sie haben eine nicht Flexform kompatible Datei ausgewählt</label>
+			<label index="err_file_not_written">ERROR: XML-Datei konnte nicht gespeichert werden.</label>
 			<label index="info_file_created">Die Datei wurde erfolgreich erstellt.</label>
 		</languageKey>
 	</data>

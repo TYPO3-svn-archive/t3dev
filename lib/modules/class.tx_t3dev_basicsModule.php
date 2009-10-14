@@ -82,9 +82,19 @@ class tx_t3dev_basicsModule implements tx_t3dev_moduleInterface {
 	public function getSelectForExtensionFiles($extList='php,inc') {
 		if ($this->pObj->MOD_SETTINGS['extSel']) {
 			$path = PATH_site.$this->pObj->extensionDir.preg_replace('/\/$/','',$this->pObj->MOD_SETTINGS['extSel']).'/';
-			if (@is_dir($path))    {
+			if (@is_dir($path)) {
 				$phpFiles = t3lib_div::removePrefixPathFromList(t3lib_div::getAllFilesAndFoldersInPath(array(),$path,$extList,0,($this->pObj->MOD_SETTINGS['extSel']==='_TYPO3'?0:99)),$path);
-				if (is_array($phpFiles))    {
+				if (is_array($phpFiles)) {
+					//IDs are md5 hashed, so I must sort them
+					sort($phpFiles);
+					$countFiles = count($phpFiles);
+					for($i = 0; $i < $countFiles; $i++) {
+						$pos = strpos($phpFiles[$i], 'locallang');
+						if($pos !== false) {
+							unset($phpFiles[$i]);
+						}
+					}
+					//sort them again, because of unset()
 					sort($phpFiles);
 					$opt=array();
 					$allFilesToComment=array();

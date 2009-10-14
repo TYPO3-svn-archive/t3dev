@@ -74,43 +74,52 @@ class tx_t3dev_flexformField {
 		'files_thumbs'		=> 'check',
 	);
 	
-	protected $fieldConfigs = array(
-		'input'				=> array('name', 'type_t3dev', 'size', 'max', 'required'),
-		'input_advanced'	=> array('name', 'type_t3dev', 'size', 'max', 'is_in', 'required', 'checkbox', 'eval', 'trim', 'password', 'md5', 'unique', 'wiz_color', 'wiz_link'),
-		'textarea'			=> array('name', 'type_t3dev', 'cols', 'rows'),
+	// The possible field types like in kickstarter
+	protected $fieldType = array(
+		'input'						=> array('name', 'type_t3dev', 'size', 'max', 'required'),
+		'input+'					=> array('name', 'type_t3dev', 'size', 'max', 'is_in', 'required', 'checkbox', 'eval', 'trim', 'password', 'md5', 'unique', 'wiz_color', 'wiz_link'),
+		'textarea'				=> array('name', 'type_t3dev', 'cols', 'rows'),
 		'textarea_rte'		=> array('name', 'type_t3dev', 'rte'),
 		'textarea_nowrap'	=> array('name', 'type_t3dev', 'cols', 'rows'),
-		'check'				=> array('name', 'type_t3dev', 'check_default'),
-		//'check_multi'		=> array('name', 'type_t3dev', 'numberBoxes'),
-		'link'				=> array('name', 'type_t3dev', 'checkbox'),
-		'date'				=> array('name', 'type_t3dev'),
-		'datetime'			=> array('name', 'type_t3dev'),
-		'integer'			=> array('name', 'type_t3dev'),
-		'select'			=> array('name', 'type_t3dev', 'select_items', 'maxitems', 'size'),
-		'radio'				=> array('name', 'type_t3dev', 'select_items'),
-		//'rel'				=> array('name', 'type_t3dev', 'rel_table', 'rel_type', 'rel_dummyitem', 'relations', 'relations_selsize', 'relations_mm', 'wiz_addrec', 'wiz_listrec', 'wiz_editrec'),
-		//'files'				=> array('name', 'type_t3dev', 'files_type', 'files', 'max_filesize', 'files_selsize', 'files_thumbs'),
-		'none'				=> array('name', 'type_t3dev'),
+		'check'						=> array('name', 'type_t3dev', 'check_default'),
+		//'check_4'					=> array('name', 'type_t3dev', 'numberBoxes'),
+		//'check_10'				=> array('name', 'type_t3dev', 'numberBoxes'),
+		'link'						=> array('name', 'type_t3dev', 'checkbox'),
+		'date'						=> array('name', 'type_t3dev'),
+		'datetime'				=> array('name', 'type_t3dev'),
+		'integer'					=> array('name', 'type_t3dev'),
+		'select'					=> array('name', 'type_t3dev', 'select_items', 'maxitems', 'size'),
+		'radio'						=> array('name', 'type_t3dev', 'select_items'),
+		//'rel'							=> array('name', 'type_t3dev', 'rel_table', 'rel_type', 'rel_dummyitem', 'relations', 'relations_selsize', 'relations_mm', 'wiz_addrec', 'wiz_listrec', 'wiz_editrec'),
+		//'files'						=> array('name', 'type_t3dev', 'files_type', 'files', 'max_filesize', 'files_selsize', 'files_thumbs'),
+		//'flex'						=> array(),
+		'none'						=> array('name', 'type_t3dev'),
+		'passthrough'			=> array(),
 	);
 	
+	// type-array is not f.e input+...it is input
+	// So here we have to map these types to the real types
+	// which will be inserted in flexform-array 
 	protected $fieldTypeMapping = array(
-		'input'				=> 'input',
-		'input_advanced'	=> 'input',
-		'textarea'			=> 'text',
+		'input'						=> 'input',
+		'input+'					=> 'input',
+		'textarea'				=> 'text',
 		'textarea_rte'		=> 'text',
 		'textarea_nowrap'	=> 'text',
-		'check'				=> 'check',
-		'check_multi'		=> 'check',
-		'link'				=> 'input',
-		'date'				=> 'input',
-		'datetime'			=> 'input',
-		'integer'			=> 'input',
-		'select'			=> 'select',
-		'radio'				=> 'radio',
-		'rel'				=> 'group',
-		'files'				=> 'group',
-		'none'				=> 'none',
-		'passthrough'		=> 'passthrough',
+		'check'						=> 'check',
+		'check_4'					=> 'check',
+		'check_10'				=> 'check',
+		'link'						=> 'input',
+		'date'						=> 'input',
+		'datetime'				=> 'input',
+		'integer'					=> 'input',
+		'select'					=> 'select',
+		'radio'						=> 'radio',
+		'rel'							=> 'group',
+		'files'						=> 'group',
+		'flex'						=> 'flex',
+		'none'						=> 'none',
+		'passthrough'			=> 'passthrough',
 	);
 	
 	//All eval-values I could find in API-Doc 
@@ -196,45 +205,62 @@ class tx_t3dev_flexformField {
 		$this->config['TCEforms']['label'] = 'LLL:EXT:'.$this->extkey.'/locallang_db.php:tt_content.pi_flexform.field_'.$this->name;
 	}
 	
-	public function init() {
-	}
-	
+	/**
+	 * Get html for selected field
+	 *
+	 * @return	HTML
+	 */
 	public function getFieldOverview() {
 		debug($this->config, 'conf');
-		$ret = '<div class="t3dev_field_'.$this->config['TCEforms']['config']['type_t3dev'].'">';
-		for ($i=0; $i < count($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']]); $i++) {
-			if ($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'type') {
-				continue;
-			}
-			if ($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'name') {
-				$ret .= '
+		$content = '<div class="t3dev_field_'.$this->config['TCEforms']['config']['type_t3dev'].'">';
+		$fieldConfig = $this->fieldType[$this->config['TCEforms']['config']['type_t3dev']]; 
+		for ($i=0; $i < count($fieldConfig); $i++) {
+			//I don't understand this part. There is no "type" defined in array?!?!
+			//if ($this->fieldType[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'type') {
+			//	continue;
+			//}
+			if ($fieldConfig[$i] == 'name') {
+				$content .= '
 				<label class="label_name">'.$GLOBALS['LANG']->getLL('label_flexform_param_name').'</label>
 					'.$this->getEditField('name', $this->name).'			
 				';
 			} else {
-				$ret .= '
-				<label class="label_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i].'">'.$GLOBALS['LANG']->getLL('label_flexform_param_'.$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]).'</label>
-				'.$this->getEditField($this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i], $this->config['TCEforms']['config'][$this->fieldConfigs[$this->config['TCEforms']['config']['type_t3dev']][$i]]).'			
+				$content .= '
+				<label class="label_'.$fieldConfig[$i].'">'.$GLOBALS['LANG']->getLL('label_flexform_param_'.$fieldConfig[$i]).'</label>
+				'.$this->getEditField($fieldConfig[$i], $this->config['TCEforms']['config'][$fieldConfig[$i]]).'			
 				';
 			}
 		}
-		$ret .= '</div>';
-		return $this->pMod->doc->section($this->name, $ret);
+		$content .= '</div>';
+		return $this->pMod->doc->section($this->name, $content);
 	}
 	
-	public function getFieldsConfig() {
-		return $this->fieldConfigs;
+	/**
+	 * Get an array with possible field configurations
+	 * like string, text, link
+	 *
+	 * @return	array
+	 */
+	public function getFieldTypes() {
+		return $this->fieldType;
 	}
 	
+	/**
+	 * Get html for selected field
+	 * $param = something like "max", "eval" or "type"
+	 * $value = the value of "max", "eval" or "type" 
+	 *
+	 * @return	HTML
+	 */
 	public function getEditField($param, $value) {
 		if ($param == 'type_t3dev') {
-			$ret = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
-			foreach ($this->fieldConfigs as $k => $v) {
+			$content = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
+			foreach ($this->fieldType as $k => $v) {
 				$sel = ($k == $value) ? ' selected="selected"' : '';
-				$ret .= '<option value="'.$k.'"'.$sel.'>'.$GLOBALS['LANG']->getLL('label_flexform_'.$k).'</option>';
+				$content .= '<option value="'.$k.'"'.$sel.'>'.$GLOBALS['LANG']->getLL('label_flexform_'.$k).'</option>';
 			}
-			$ret .= '</select>';
-			return $ret;
+			$content .= '</select>';
+			return $content;
 		}
 		if (is_array($this->configOptions[$param])) {
 			$ret = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
@@ -297,18 +323,37 @@ class tx_t3dev_flexformField {
 		}
 	}
 	
+	/**
+	 * Get name of field. If there is no name, than a md5 hashed value
+	 * will be returned.
+	 *
+	 * @return	void
+	 */
 	public function getName() {
 		return $this->name;
 	}
 	
+	/**
+	 * $type is the value from the field selectbox. So value
+	 * has to be mapped to the real type first
+	 * f.e. textarea_rte => text
+	 *
+	 * @return	void
+	 */
 	public function setType($type) {
 		$this->config['TCEforms']['config']['type_t3dev'] = $type;
 		$this->config['TCEforms']['config']['type'] = $this->fieldTypeMapping[$type];
 	}		
 	
+	/**
+	 * returns a array with field configuration for current field
+	 *
+	 * @return	array		configuration array
+	 */
 	public function asArray() {
 		// post process eval values
 		$ret = $this->config;
+		print_r($ret);
 		for ($i=0; $i<count($this->evalValues); $i++) {
 			if ($value = $ret['TCEforms']['config'][$this->evalValues[$i]]) {
 				if (!t3lib_div::inList($ret['TCEforms']['config']['eval'], $this->evalValues[$i])) {

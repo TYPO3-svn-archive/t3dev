@@ -188,6 +188,11 @@ class tx_t3dev_flexform {
 		}
 	}
 
+	/**
+	 * Merges current flexformarray to add a new field
+	 *
+	 * @return	void
+	 */
 	protected function createNewField($field) {
 		$newField = new tx_t3dev_flexformField($this->pObj, '', $this->extkey);
 		$newField->setType($field);
@@ -286,43 +291,48 @@ class tx_t3dev_flexform {
 		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_del_sheet'), $content);
 	}
 
+	/**
+	 * Generate selectbox with possible fields to insert
+	 *
+	 * @return	html
+	 */
 	protected function getNewFieldSelector() {
-		$ret .= '<select name="ffgen[newField]" onchange="jumpToUrl(\'?ffgen[newField]=\'+this.options[this.selectedIndex].value,this);">';
-		$ret .= '<option value=""></option>';
+		$content .= '<select name="ffgen[newField]" onchange="jumpToUrl(\'?ffgen[newField]=\'+this.options[this.selectedIndex].value,this);">';
+		$content .= '<option value=""></option>';
 		$dummyField = new tx_t3dev_flexformField($this->pObj, '', $this->extkey);
-		$fieldTypes = $dummyField->getFieldsConfig();
-		foreach ($fieldTypes as $k => $v) {
-			$ret .= '<option value="'.$k.'">'.$GLOBALS['LANG']->getLL('label_flexform_'.$k).'</option>';
+		$fieldTypes = $dummyField->getFieldTypes();
+		foreach($fieldTypes as $k => $v) {
+			$content .= '<option value="'.$k.'">'.$GLOBALS['LANG']->getLL('label_flexform_'.$k).'</option>';
 		}
-		$ret .= '</select>';
-		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_new_field'), $ret);
+		$content .= '</select>';
+		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_new_field'), $content);
 	}
 	
+	/**
+	 * Generate list with fields in flexform
+	 *
+	 * @return	html
+	 */
 	protected function getFieldsForCurrentSheet() {
-		if(is_array($this->flexformArray['sheets'])) {
-			$sheet = 'sheets';
-			$currentFields = $this->flexformArray[$sheet][$this->pObj->getFromSession('sheet')]['ROOT']['el'];
-		} elseif(is_array($this->flexformArray['ROOT'])) {
-			$sheet = 'ROOT';
-			$currentFields = $this->flexformArray[$sheet]['el'];
-		} else {
+		// Check id sheets-array is available
+		if(!is_array($this->flexformArray['sheets'])) {
 			$this->error = $GLOBALS['LANG']->getLL('err_no_valid_xml_file');
 			return false;
 		}
 		
+		$currentFields = $this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'];
 		if (is_array($currentFields) && (count($currentFields) > 0)) {
 			//$flexformFieldClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexformField');
 			foreach ($currentFields as $k => $v) {
 				debug($currentFields, 'getFieldsForCurrentSheet');
 				$flexformField = new tx_t3dev_flexformField($this->pObj, $k, $this->extkey, $currentFields[$k]);
-				$flexformField->init();
-				$ret .= $flexformField->getFieldOverview();
-				$ret .= $this->getUpdateButton();
-				$ret .= $this->pMod->doc->divider(2);
+				$content = $flexformField->getFieldOverview();
+				$content .= $this->getUpdateButton();
+				$content .= $this->pMod->doc->divider(2);
 			}
-			return $ret;
+			return $content;
 		} else {
-			return 'no fields';
+			return $GLOBALS['LANG']->getLL('err_no_fields');
 		}
 	}
 	

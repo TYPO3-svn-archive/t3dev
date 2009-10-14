@@ -2,12 +2,13 @@
 project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 
 09-10-13 Stefan Frömken <firma@sfroemken.de>
-	*  better eval value check, without ending komma (,)
+	* better eval value check, without ending komma (,)
 	* Inserted a function which adds a sheet/sheettitle to flexforms if there is no sheet defined. Errorhandling implemented
 	* XML-files will be saved with tabbed spaces now. So every user can define space in his program himself.
 	* Added some comments for better reading
 	* Added the possibility to remove sheets
 	* delete locallang-files from filelist
+	* translation updates
 
 09-10-13 Stefan Frömken <firma@sfroemken.de>
 	* Now you can create new xml-files also on Windows

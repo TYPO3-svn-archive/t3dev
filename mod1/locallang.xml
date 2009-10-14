@@ -34,12 +34,13 @@
 			<label index="label_NO">No</label>
 			<label index="label_update">update</label>
 			<label index="label_flexform_input">String input</label>
-			<label index="label_flexform_input_advanced" selected="selected">String input, advanced</label>
+			<label index="label_flexform_input+">String input, advanced</label>
 			<label index="label_flexform_textarea">Text area</label>
 			<label index="label_flexform_textarea_rte">Text area with RTE</label>
-			<label index="label_flexform_textarea_nowrap">Text area, No wrapping</label>
+			<label index="label_flexform_textarea_nowrap">Text area, no wrapping</label>
 			<label index="label_flexform_check">Checkbox, single</label>
-			<label index="label_flexform_check_multi">Checkbox, multiple</label>
+			<label index="label_flexform_check_4">Checkbox, 4 boxes in a row</label>
+			<label index="label_flexform_check_10">Checkbox, 10 boxes in two rows (max)</label>
 			<label index="label_flexform_link">Link</label>
 			<label index="label_flexform_date">Date</label>
 			<label index="label_flexform_datetime">Date and time</label>
@@ -48,6 +49,7 @@
 			<label index="label_flexform_radio">Radio buttons</label>
 			<label index="label_flexform_rel">Database relation</label>
 			<label index="label_flexform_files">Files</label>
+			<label index="label_flexform_flex">Flex</label>
 			<label index="label_flexform_none">Not editable, only displayed</label>
 			<label index="label_flexform_passthrough">[Passthrough]</label>
 			<label index="label_flexform_eval_date">Date (day-month-year)</label>
@@ -135,6 +137,7 @@
 			<label index="err_wrong_filepath">ERROR: You typed in a wrong file or file doesn't ends with '.xml'</label>
 			<label index="err_no_valid_xml_file">ERROR: You have selected a non flexform xml-file</label>
 			<label index="err_file_not_written">ERROR: XML-file can't be written to disc</label>
+			<label index="err_no_fields">ERROR: There are no fields in this sheet/flexform.</label>
 			<label index="info_file_created">The file was successfully created</label>
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -165,6 +168,25 @@
 			<label index="label_YES">Ja</label>
 			<label index="label_NO">Nein</label>
 			<label index="label_update">aktualisieren</label>
+			<label index="label_flexform_input">Texteingabe</label>
+			<label index="label_flexform_input+">Erweiterte Texteingabe</label>
+			<label index="label_flexform_textarea">Textbox</label>
+			<label index="label_flexform_textarea_rte">Textbox mit RTE</label>
+			<label index="label_flexform_textarea_nowrap">Textbox ohne Zeilenumbruch</label>
+			<label index="label_flexform_check">Eine Ankreuzbox</label>
+			<label index="label_flexform_check_4">4 Ankreuzboxen in einer Zeile</label>
+			<label index="label_flexform_check_10">10 Ankreuzboxen in einer Zeile</label>
+			<label index="label_flexform_link">Verweis</label>
+			<label index="label_flexform_date">Datum</label>
+			<label index="label_flexform_datetime">Datum und Uhrzeit</label>
+			<label index="label_flexform_integer">Zahlen von 10-1000</label>
+			<label index="label_flexform_select">Auswahllisten</label>
+			<label index="label_flexform_radio">Auswahl (radio)</label>
+			<label index="label_flexform_rel">Datenbankbeziehungen</label>
+			<label index="label_flexform_files">Dateien</label>
+			<label index="label_flexform_flex">Flexform</label>
+			<label index="label_flexform_none">Nicht editierbar, nur anzeigen</label>
+			<label index="label_flexform_passthrough">[Durchschleifen]</label>
 			<label index="ext_local">lokale Extensions</label>
 			<label index="ext_global">globale Extensions</label>
 			<label index="ext_system">System-Extensions</label>
@@ -178,6 +200,7 @@
 			<label index="err_wrong_filepath">ERROR: Sie haben keine Datei angegeben oder die Datei endet nicht mit '.xml'</label>
 			<label index="err_no_valid_xml_file">ERROR: Sie haben eine nicht Flexform kompatible Datei ausgewählt</label>
 			<label index="err_file_not_written">ERROR: XML-Datei konnte nicht gespeichert werden.</label>
+			<label index="err_no_fields">ERROR: In diesem Reiter/Flexform sind keine Felder definiert.</label>
 			<label index="info_file_created">Die Datei wurde erfolgreich erstellt.</label>
 		</languageKey>
 	</data>

@@ -39,6 +39,7 @@ class tx_t3dev_flexform {
 	protected $flexformArray;
 	protected $request;
 	protected $error = '';
+	protected $message = '';
 
 	public function init(&$pObj, $extkey) {
 		$this->pObj = $pObj;
@@ -54,6 +55,14 @@ class tx_t3dev_flexform {
 		
 		if (strlen($this->request['newSheet'])) {
 			$this->createNewSheet($this->request['newSheet']);
+		}
+
+		if($this->request['delSheet'] == 'del') {
+			if($this->request['del']) {
+				$this->deleteSheet($this->pObj->getFromSession('sheet'), 1);
+			} else {
+				$this->deleteSheet($this->pObj->getFromSession('sheet'));
+			}
 		}
 
 		if (strlen($this->request['newField'])) {
@@ -72,7 +81,7 @@ class tx_t3dev_flexform {
 	public function getContent() {
 		$content .= $this->getSheetSelector();
 		$content .= $this->getNewSheetField();
-		$content .= $this->getSubmitButton();
+		$content .= $this->getDelSheetField();
 		$content .= $this->pMod->doc->divider(5);
 		$content .= $this->getNewFieldSelector();
 		$content .= $this->pMod->doc->divider(5);
@@ -81,7 +90,10 @@ class tx_t3dev_flexform {
 		if(trim($this->error) != '') {
 			$content = $this->pMod->doc->rfw($this->error);
 		}
-		
+		if(trim($this->message) != '') {
+			$content = $this->message;
+		}
+
 		return $this->pMod->doc->section($GLOBALS['LANG']->getLL('label_ffgen'), $content);
 	}
 
@@ -131,6 +143,11 @@ class tx_t3dev_flexform {
 		$this->save();
 	}
 	
+	/**
+	 * Merges a new sheet into current flexformarray
+	 *
+	 * @return	void
+	 */
 	protected function createNewSheet($sheet) {
 		$sheet = trim($sheet);
 		$this->flexformArray['sheets'][$sheet] = array(
@@ -146,7 +163,31 @@ class tx_t3dev_flexform {
 		$this->flexform = t3lib_div::getURL($this->filename);
 		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure');
 	}
-	
+
+	/**
+	 * Merges current flexformarray to delete one sheet
+	 *
+	 * @return	html	message to confirm deletion
+	 */
+	protected function deleteSheet($sheet, $delete = 0) {
+		if($delete) {
+			echo "Geht rein";
+			$sheet = trim($sheet);
+			unset($this->flexformArray['sheets'][$sheet]);
+			$this->pObj->setToSession('sheet', 'sDEF');
+			$this->save();
+			$this->flexform = t3lib_div::getURL($this->filename);
+			$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure');			
+		} else {
+			$this->message = $GLOBALS['LANG']->getLL('label_del_sheet_really').'&nbsp;';
+			$this->message .= '<strong>'.$this->pObj->getFromSession('sheet').'</strong><br />';
+			$this->message .= '<input type="hidden" name="ffgen[del]" value="1" />';
+			$this->message .= '<a href="index.php?ffgen[delSheet]=del&amp;ffgen[del]=1">'.$GLOBALS['LANG']->getLL('label_YES').'</a>&nbsp;';
+			$this->message .= '<input type="submit" name="ffgen[submit]" value="'.$GLOBALS['LANG']->getLL('label_NO').'" />';
+			$this->message = $this->pMod->doc->funcMenu($this->message, '');
+		}
+	}
+
 	protected function createNewField($field) {
 		$newField = new tx_t3dev_flexformField($this->pObj, '', $this->extkey);
 		$newField->setType($field);
@@ -218,14 +259,33 @@ class tx_t3dev_flexform {
 		}
 
 		$content .= '</select>';
+		$content .= $this->pMod->doc->spacer(5);
 		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_sheets'), $content);
 	}
 	
+	/**
+	 * Generate fields for adding a new sheet
+	 *
+	 * @return	html
+	 */
 	protected function getNewSheetField() {
-		$ret .= '<input type="text" name="ffgen[newSheet]" value="" />';
-		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_new_sheet'), $ret);
+		$content = '<input type="text" name="ffgen[newSheet]" value="" />&nbsp;';
+		$content .= '<input type="submit" name="ffgen[submit]" value="'.$GLOBALS['LANG']->getLL('label_submit').'" />';
+		$content .= $this->pMod->doc->spacer(5);
+		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_new_sheet'), $content);
 	}
-		
+
+	/**
+	 * Generate fields for deleting active sheet
+	 *
+	 * @return	html
+	 */
+	protected function getDelSheetField() {
+		$content = '<a href="index.php?ffgen[delSheet]=del">'.$GLOBALS['LANG']->getLL('label_del').'</a>';
+		$content .= $this->pMod->doc->spacer(5);
+		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_del_sheet'), $content);
+	}
+
 	protected function getNewFieldSelector() {
 		$ret .= '<select name="ffgen[newField]" onchange="jumpToUrl(\'?ffgen[newField]=\'+this.options[this.selectedIndex].value,this);">';
 		$ret .= '<option value=""></option>';
@@ -264,11 +324,6 @@ class tx_t3dev_flexform {
 		} else {
 			return 'no fields';
 		}
-	}
-	
-	protected function getSubmitButton() {
-		$ret .= '<input type="submit" name="ffgen[submit]" value="'.$GLOBALS['LANG']->getLL('label_submit').'" />';
-		return $this->pMod->doc->funcMenu('', $ret);
 	}
 	
 	protected function getUpdateButton() {

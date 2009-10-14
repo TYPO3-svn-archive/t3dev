@@ -25,8 +25,13 @@
 			<label index="label_ffgen">Flexform Generator</label>
 			<label index="label_sheets">sheets</label>
 			<label index="label_new_sheet">new sheet</label>
+			<label index="label_del_sheet">Delete current selected sheet</label>
+			<label index="label_del_sheet_really">Do you really want delete following sheet?</label>
 			<label index="label_new_field">new field</label>
 			<label index="label_submit">submit</label>
+			<label index="label_del">delete</label>
+			<label index="label_YES">Yes</label>
+			<label index="label_NO">No</label>
 			<label index="label_update">update</label>
 			<label index="label_flexform_input">String input</label>
 			<label index="label_flexform_input_advanced" selected="selected">String input, advanced</label>
@@ -152,8 +157,13 @@
 			<label index="label_ffgen">Flexform Generator</label>
 			<label index="label_sheets">Reiter</label>
 			<label index="label_new_sheet">Neuer Reiter</label>
+			<label index="label_del_sheet">Aktuell gewählen Reiter löschen</label>
+			<label index="label_del_sheet_really">Soll der folgende Reiter wirklich gelöscht werden?</label>
 			<label index="label_new_field">Neues Feld</label>
 			<label index="label_submit">absenden</label>
+			<label index="label_del">Löschen</label>
+			<label index="label_YES">Ja</label>
+			<label index="label_NO">Nein</label>
 			<label index="label_update">aktualisieren</label>
 			<label index="ext_local">lokale Extensions</label>
 			<label index="ext_global">globale Extensions</label>

@@ -256,8 +256,6 @@ class tx_t3dev_flexformField {
 		debug($this->config, 'conf');
 		$content = '<div class="t3dev_field_'.$this->config['TCEforms']['config']['type_t3dev'].'">';
 		$fieldConfig = $this->fieldType[$this->config['TCEforms']['config']['type_t3dev']];
-		//print_r($fieldConfig).'<br />';
-		//print_r($this->config).'<br />';
 		for ($i=0; $i < count($fieldConfig); $i++) {
 			//I don't understand this part. There is no "type" defined in array?!?!
 			//if ($this->fieldType[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'type') {
@@ -314,7 +312,6 @@ class tx_t3dev_flexformField {
 	 * @return	HTML
 	 */
 	public function getEditField($param, $value) {
-		echo 'getEditField P:'.$param.'V:'.$value.'<br />';
 		if ($param == 'type_t3dev') {
 			$content = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
 			foreach ($this->fieldType as $k => $v) {

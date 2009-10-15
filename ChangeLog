@@ -11,6 +11,7 @@ project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 	* Changed all new instance calls to t3lib_div::makeInstance
 	* If you choose a sheet other then sDEF, create a new sheet, create a new field, this field was added to the sheet selected before
 	* Sometimes you have to update current page twice before you get the available fields.
+	* Litte translation changes
 
 09-10-14 Stefan Frömken <firma@sfroemken.de>
 	* better eval value check, without ending komma (,)

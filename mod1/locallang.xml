@@ -15,7 +15,7 @@
 			<label index="flexformModuleDescription">this module will help you to generate a flexform for your extension</label>
 			<label index="label_select_extension">select extension</label>
 			<label index="label_select_extensiontype">select install type</label>
-			<label index="label_select_file">select file</label>
+			<label index="label_select_file">select flexform file (xml)</label>
 			<label index="label_selected_file">selected file</label>
 			<label index="label_file">File</label>
 			<label index="label_format">Format</label>
@@ -152,7 +152,7 @@
 			<label index="flexformModuleDescription">Dieses Module hilft Dir dabei eine FlexForm für Deine Extension zu erstellen.</label>
 			<label index="label_select_extension">Wähle Extension</label>
 			<label index="label_select_extensiontype">Wähle Installationart</label>
-			<label index="label_select_file">Wähle Datei</label>
+			<label index="label_select_file">Wähle Flexform Datei (xml)</label>
 			<label index="label_selected_file">Ausgewählte Datei</label>
 			<label index="label_file">Datei</label>
 			<label index="label_format">Format</label>

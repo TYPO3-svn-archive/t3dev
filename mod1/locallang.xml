@@ -11,7 +11,7 @@
 			<label index="basicsModuleDescription"></label>
 			<label index="defaultModuleTitle">please select a tool</label>
 			<label index="defaultModuleDescription">please select a tool</label>
-			<label index="flexformModuleTitle">flexform generator</label>
+			<label index="flexformModuleTitle">flexform editor</label>
 			<label index="flexformModuleDescription">this module will help you to generate a flexform for your extension</label>
 			<label index="label_select_extension">select extension</label>
 			<label index="label_select_extensiontype">select install type</label>
@@ -146,7 +146,7 @@
 			<label index="basicsModuleDescription"></label>
 			<label index="defaultModuleTitle">Bitte ein Tool auswählen</label>
 			<label index="defaultModuleDescription">Bitte ein Tool auswählen</label>
-			<label index="flexformModuleTitle">Flexform Generator</label>
+			<label index="flexformModuleTitle">Flexform Editor</label>
 			<label index="flexformModuleDescription">Dieses Module hilft Dir dabei eine FlexForm für Deine Extension zu erstellen.</label>
 			<label index="label_select_extension">Wähle Extension</label>
 			<label index="label_select_extensiontype">Wähle Installationart</label>

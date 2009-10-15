@@ -112,8 +112,8 @@ class tx_t3dev_flexformField {
 		'integer'					=> array('name', 'type_t3dev'),
 		'select'					=> array('name', 'type_t3dev', 'select_items', 'maxitems', 'size'),
 		'radio'						=> array('name', 'type_t3dev', 'select_items'),
-		//'rel'							=> array('name', 'type_t3dev', 'rel_table', 'rel_type', 'rel_dummyitem', 'relations', 'relations_selsize', 'relations_mm', 'wiz_addrec', 'wiz_listrec', 'wiz_editrec'),
-		//'files'						=> array('name', 'type_t3dev', 'files_type', 'files', 'max_filesize', 'files_selsize', 'files_thumbs'),
+		'rel'							=> array('name', 'type_t3dev', 'rel_table', 'rel_type', 'rel_dummyitem', 'relations', 'relations_selsize', 'relations_mm', 'wiz_addrec', 'wiz_listrec', 'wiz_editrec'),
+		'files'						=> array('name', 'type_t3dev', 'files_type', 'files', 'max_filesize', 'files_selsize', 'files_thumbs'),
 		//'flex'						=> array(),
 		'none'						=> array('name', 'type_t3dev'),
 		'passthrough'			=> array(),
@@ -177,7 +177,6 @@ class tx_t3dev_flexformField {
 		$this->config = $config;
 		$this->request = t3lib_div::_GP('ffgen');
 		$this->config['TCEforms']['config']['type'] = $this->fieldTypeMapping[$config['TCEforms']['config']['type_t3dev']];
-
 		$this->checkEvalValues();
 		
 		// parse wizards

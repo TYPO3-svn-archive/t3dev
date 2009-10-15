@@ -51,6 +51,7 @@ class tx_t3dev_flexform {
 		$this->flexform = t3lib_div::getURL($this->filename);
 		$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure');
 		$this->flexformCorrection();
+		$this->setTypeT3dev();
 		debug($this->flexformArray, 'FlexfromArray', '', '', 10);
 		
 		if (strlen($this->request['newSheet'])) {
@@ -143,6 +144,41 @@ class tx_t3dev_flexform {
 		$this->save();
 	}
 	
+	/**
+	 * If there is allready a flexform, than there is no type_t3dev-array
+	 * This function will help to find out the missing array
+	 *
+	 * @return	void
+	 */
+	protected function setTypeT3dev() {
+		$currentFields = $this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'];
+		if (is_array($currentFields) && (count($currentFields) > 0)) {
+			foreach ($currentFields as $key => $value) {
+				if($value['TCEforms']['config']['type_t3dev'] == '') {
+					switch($value['TCEforms']['config']['type']) {
+						case 'group':
+							// If group, than internal_type is a required value
+							switch($value['TCEforms']['config']['internal_type']) {
+								case 'file':
+								case 'folder':
+									$typeValue = 'file';
+								break;
+								case 'db':
+									$typeValue = 'rel';
+								break;
+							}
+						break;
+						case 'select':
+							$typeValue = 'select';
+						break;
+					}
+					$this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'][$key]['TCEforms']['config']['type_t3dev'] = $typeValue;
+				}
+			}
+		}		
+	}
+
+
 	/**
 	 * Merges a new sheet into current flexformarray
 	 *
@@ -325,7 +361,7 @@ class tx_t3dev_flexform {
 			foreach ($currentFields as $k => $v) {
 				debug($currentFields, 'getFieldsForCurrentSheet');
 				$flexformField = new tx_t3dev_flexformField($this->pObj, $k, $this->extkey, $currentFields[$k]);
-				$content = $flexformField->getFieldOverview();
+				$content .= $flexformField->getFieldOverview();
 				$content .= $this->getUpdateButton();
 				$content .= $this->pMod->doc->divider(2);
 			}

@@ -7,6 +7,7 @@ project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 	* Added a function to merge original eval-values and eval-values created by FFG
 	* Changed Title from Flexform Generator to Flexform Editor
 	* First page (sDEF) of sample xml from wiki.typo3.org can be displayed.
+	* Now you can delete fields
 
 09-10-14 Stefan Frömken <firma@sfroemken.de>
 	* better eval value check, without ending komma (,)

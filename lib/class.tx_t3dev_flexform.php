@@ -66,6 +66,14 @@ class tx_t3dev_flexform {
 			}
 		}
 
+		if($this->request['delField'] != '') {
+			if($this->request['del']) {
+				$this->deleteField($this->request['delField'], 1);
+			} else {
+				$this->deleteField($this->request['delField']);
+			}
+		}
+
 		if (strlen($this->request['newField'])) {
 			$this->createNewField($this->request['newField']);
 		}
@@ -238,6 +246,47 @@ class tx_t3dev_flexform {
 		$this->save();
 	}
 	
+	/**
+	 * Generate fields for deleting selected field
+	 *
+	 * @return	html
+	 */
+	protected function deleteField($field, $delete = 0) {
+		if($delete) {
+			$field = trim($field);
+			$sheet = $this->pObj->getFromSession('sheet');
+			unset($this->flexformArray['sheets'][$sheet]['ROOT']['el'][$field]);
+			$this->pObj->setToSession('sheet', 'sDEF');
+			$this->save();
+			$this->flexform = t3lib_div::getURL($this->filename);
+			$this->flexformArray = t3lib_div::xml2array($this->flexform, 'T3DataStructure');
+		} else {
+			$this->message = $GLOBALS['LANG']->getLL('label_del_field_really').'&nbsp;';
+			$this->message .= '<strong>'.$field.'</strong><br />';
+			$this->message .= '<input type="hidden" name="ffgen[del]" value="1" />';
+			$this->message .= '<a href="index.php?ffgen[delField]='.$field.'&amp;ffgen[del]=1">'.$GLOBALS['LANG']->getLL('label_YES').'</a>&nbsp;';
+			$this->message .= '<input type="submit" name="ffgen[submit]" value="'.$GLOBALS['LANG']->getLL('label_NO').'" />';
+			$this->message = $this->pMod->doc->funcMenu($this->message, '');
+		}
+
+
+
+		//$content = '<a href="index.php?ffgen[delField]='.$field.'&amp;ffgen[sheet]='.$this->pObj->getFromSession('sheet').'">'.$GLOBALS['LANG']->getLL('label_del').'</a>';
+		//$content .= $this->pMod->doc->spacer(5);
+		//return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_del_field'), $content);
+	}
+
+	/**
+	 * Generate fields for deleting selected field
+	 *
+	 * @return	html
+	 */
+	protected function getDelFields($field) {
+		$content = '<a href="index.php?ffgen[delField]='.$field.'&amp;ffgen[sheet]='.$this->pObj->getFromSession('sheet').'">'.$GLOBALS['LANG']->getLL('label_del').'</a>';
+		$content .= $this->pMod->doc->spacer(5);
+		return $this->pMod->doc->funcMenu($GLOBALS['LANG']->getLL('label_del_field'), $content);
+	}
+
 	protected function updateFields($sheet, $data) {
 		foreach ($data as $k => $v) {
 			debug($data[$k]['TCEforms']['config'], 'updateFields');
@@ -362,7 +411,10 @@ class tx_t3dev_flexform {
 				debug($currentFields, 'getFieldsForCurrentSheet');
 				$flexformField = new tx_t3dev_flexformField($this->pObj, $k, $this->extkey, $currentFields[$k]);
 				$content .= $flexformField->getFieldOverview();
+				$content .= $this->pMod->doc->spacer(5);
 				$content .= $this->getUpdateButton();
+				$content .= $this->pMod->doc->spacer(5);
+				$content .= $this->getDelFields($k);
 				$content .= $this->pMod->doc->divider(2);
 			}
 			return $content;

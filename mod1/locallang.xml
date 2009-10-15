@@ -27,7 +27,9 @@
 			<label index="label_new_sheet">new sheet</label>
 			<label index="label_del_sheet">Delete current selected sheet</label>
 			<label index="label_del_sheet_really">Do you really want delete following sheet?</label>
-			<label index="label_new_field">new field</label>
+			<label index="label_new_field">new field</label>label_del_field
+			<label index="label_del_field">Delete this field</label>
+			<label index="label_del_field_really">Do you really want to delete following field?</label>
 			<label index="label_submit">submit</label>
 			<label index="label_del">delete</label>
 			<label index="label_YES">Yes</label>
@@ -163,6 +165,8 @@
 			<label index="label_del_sheet">Aktuell gewählen Reiter löschen</label>
 			<label index="label_del_sheet_really">Soll der folgende Reiter wirklich gelöscht werden?</label>
 			<label index="label_new_field">Neues Feld</label>
+			<label index="label_del_field">Aktuelles Feld löschen</label>
+			<label index="label_del_field_really">Soll das folgende Feld wirklich gelöscht werden?</label>
 			<label index="label_submit">absenden</label>
 			<label index="label_del">Löschen</label>
 			<label index="label_YES">Ja</label>

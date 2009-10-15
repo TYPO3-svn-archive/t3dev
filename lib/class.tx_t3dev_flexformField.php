@@ -169,7 +169,7 @@ class tx_t3dev_flexformField {
 		'uniqueInPid',
 	);
 	
-	public function __construct(&$pObj, $name, $extkey, $config = array()) {
+	public function init(&$pObj, $name, $extkey, $config = array()) {
 		$this->pObj = $pObj;
 		$this->pMod = $this->pObj->getPObj();
 		$this->name = (strlen($name)) ? $name : 'a'.substr(md5(time()), 0, 10);

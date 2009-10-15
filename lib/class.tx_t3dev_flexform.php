@@ -46,6 +46,7 @@ class tx_t3dev_flexform {
 		$this->pMod = $pObj->getPObj();
 		$this->extkey = $extkey;
 		$this->request = t3lib_div::_GP('ffgen');
+		$this->pObj->setToSession('sheet', 'sDEF');
 		debug($this->request, '$this->request', '', '', 10);
 
 		$this->flexform = t3lib_div::getURL($this->filename);
@@ -159,31 +160,40 @@ class tx_t3dev_flexform {
 	 * @return	void
 	 */
 	protected function setTypeT3dev() {
-		$currentFields = $this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'];
-		if (is_array($currentFields) && (count($currentFields) > 0)) {
-			foreach ($currentFields as $key => $value) {
-				if($value['TCEforms']['config']['type_t3dev'] == '') {
-					switch($value['TCEforms']['config']['type']) {
-						case 'group':
-							// If group, than internal_type is a required value
-							switch($value['TCEforms']['config']['internal_type']) {
-								case 'file':
-								case 'folder':
-									$typeValue = 'file';
-								break;
-								case 'db':
-									$typeValue = 'rel';
-								break;
-							}
-						break;
-						case 'select':
-							$typeValue = 'select';
-						break;
+		$sheets = $this->flexformArray['sheets'];
+		foreach($sheets as $k => $v) {
+			$currentFields = $sheets[$k]['ROOT']['el'];
+			if(is_array($currentFields) && (count($currentFields) > 0)) {
+				foreach($currentFields as $key => $value) {
+					if($value['TCEforms']['config']['type_t3dev'] == '') {
+						switch($value['TCEforms']['config']['type']) {
+							case 'group':
+								// If group, than internal_type is a required value
+								switch($value['TCEforms']['config']['internal_type']) {
+									case 'file':
+									case 'folder':
+										$typeValue = 'file';
+									break;
+									case 'db':
+										$typeValue = 'rel';
+									break;
+								}
+							break;
+							case 'select':
+								$typeValue = 'select';
+							break;
+							case 'check':
+								$cols = $value['TCEforms']['config']['cols'];
+								if($cols == 1 || $cols == '') $typeValue = 'check';
+								if($cols > 1 && $cols <= 4) $typeValue = 'check_4';
+								if($cols > 4 && $cols <= 10) $typeValue = 'check_10';
+							break;
+						}
+						$this->flexformArray['sheets'][$k]['ROOT']['el'][$key]['TCEforms']['config']['type_t3dev'] = $typeValue;
 					}
-					$this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'][$key]['TCEforms']['config']['type_t3dev'] = $typeValue;
 				}
-			}
-		}		
+			}			
+		}
 	}
 
 
@@ -237,7 +247,8 @@ class tx_t3dev_flexform {
 	 * @return	void
 	 */
 	protected function createNewField($field) {
-		$newField = new tx_t3dev_flexformField($this->pObj, '', $this->extkey);
+		$newField = t3lib_div::makeInstance('tx_t3dev_flexformField');
+		$newField->init($this->pObj, '', $this->extkey);
 		$newField->setType($field);
 		if (!is_array($this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'])) {
 			$this->flexformArray['sheets'][$this->pObj->getFromSession('sheet')]['ROOT']['el'] = array();
@@ -292,7 +303,8 @@ class tx_t3dev_flexform {
 			debug($data[$k]['TCEforms']['config'], 'updateFields');
 			$name = $data[$k]['TCEforms']['config']['name'];
 			unset($data[$k]['TCEforms']['config']['name']);
-			$newField = new tx_t3dev_flexformField($this->pObj, $name, $this->extkey, $data[$k]);
+			$newField = t3lib_div::makeInstance('tx_t3dev_flexformField');
+			$newField->init($this->pObj, $name, $this->extkey, $data[$k]);
 			unset($this->flexformArray['sheets'][$sheet]['ROOT']['el'][$k]);
 			$this->flexformArray['sheets'][$sheet]['ROOT']['el'][$newField->getName()] = $newField->asArray();
 		}
@@ -383,7 +395,8 @@ class tx_t3dev_flexform {
 	protected function getNewFieldSelector() {
 		$content .= '<select name="ffgen[newField]" onchange="jumpToUrl(\'?ffgen[newField]=\'+this.options[this.selectedIndex].value,this);">';
 		$content .= '<option value=""></option>';
-		$dummyField = new tx_t3dev_flexformField($this->pObj, '', $this->extkey);
+		$dummyField = t3lib_div::makeInstance('tx_t3dev_flexformField');
+		$dummyField->init($this->pObj, '', $this->extkey);
 		$fieldTypes = $dummyField->getFieldTypes();
 		foreach($fieldTypes as $k => $v) {
 			$content .= '<option value="'.$k.'">'.$GLOBALS['LANG']->getLL('label_flexform_'.$k).'</option>';
@@ -409,7 +422,8 @@ class tx_t3dev_flexform {
 			//$flexformFieldClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexformField');
 			foreach ($currentFields as $k => $v) {
 				debug($currentFields, 'getFieldsForCurrentSheet');
-				$flexformField = new tx_t3dev_flexformField($this->pObj, $k, $this->extkey, $currentFields[$k]);
+				$flexformField = t3lib_div::makeInstance('tx_t3dev_flexformField');
+				$flexformField->init($this->pObj, $k, $this->extkey, $currentFields[$k]);
 				$content .= $flexformField->getFieldOverview();
 				$content .= $this->pMod->doc->spacer(5);
 				$content .= $this->getUpdateButton();

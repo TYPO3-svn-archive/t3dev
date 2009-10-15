@@ -171,7 +171,6 @@ class tx_t3dev_flexform {
 	 */
 	protected function deleteSheet($sheet, $delete = 0) {
 		if($delete) {
-			echo "Geht rein";
 			$sheet = trim($sheet);
 			unset($this->flexformArray['sheets'][$sheet]);
 			$this->pObj->setToSession('sheet', 'sDEF');
@@ -314,7 +313,7 @@ class tx_t3dev_flexform {
 	 * @return	html
 	 */
 	protected function getFieldsForCurrentSheet() {
-		// Check id sheets-array is available
+		// Check if sheets-array is available
 		if(!is_array($this->flexformArray['sheets'])) {
 			$this->error = $GLOBALS['LANG']->getLL('err_no_valid_xml_file');
 			return false;

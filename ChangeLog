@@ -1,7 +1,12 @@
 (add new changes on top of this file)
 project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 
-09-10-13 Stefan Frömken <firma@sfroemken.de>
+09-10-15 Stefan Frömken <firma@sfroemken.de>
+	* checkboxes like required, trim, password works correct now
+	* checkboxes will be checked, if they are set in FlexForm
+	* Added a function to merge original eval-values and eval-values created by FFG
+
+09-10-14 Stefan Frömken <firma@sfroemken.de>
 	* better eval value check, without ending komma (,)
 	* Inserted a function which adds a sheet/sheettitle to flexforms if there is no sheet defined. Errorhandling implemented
 	* XML-files will be saved with tabbed spaces now. So every user can define space in his program himself.

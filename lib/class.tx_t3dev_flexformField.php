@@ -38,46 +38,68 @@ class tx_t3dev_flexformField {
 	protected $name;
 	protected $extkey;
 	protected $config;
+
+	//On which way should a field displayed in HTML
+	//In most cases the values are egual with attr. "type" in input
+	//f.e. "size" can displayed in a textfield. <input type="text">
+	//f.e. "required" can displayed as checkbox. <input type="check">
 	protected $configOptions = array(
-		'name' 				=> 'text',
-		'eval' 				=> 'selectm|date|time|timesec|datetime|year|int|upper|lower|double2|alpha|num|alphanum|alphanum_x|nospace|is_in',
-		'size' 				=> 'text',
-		'is_in'				=> 'text',
-		'max' 				=> 'text',
-		'required'			=> 'check',
-		'checkbox'			=> 'check',
-		'trim'				=> 'check',
-		'password'			=> 'check',
-		'md5'				=> 'check',
-		'unique'			=> 'radio|G|L|',
-		'wiz_color'			=> 'check',
-		'wiz_link'			=> 'check',
-		'wiz_addrec'		=> 'check',
-		'wiz_listrec'		=> 'check',
-		'wiz_editrec'		=> 'check',
-		'cols' 				=> 'text',
-		'rows' 				=> 'text',
-		'rte'				=> 'select|tt_content|none',
-		'check_default'		=> 'check',
-		'numberBoxes'		=> 'text',
-		'select_items'		=> 'text',
-		'select_icons'		=> 'check',
-		'maxitems'			=> 'text',
-		'relations_mm'		=> 'check',
-		'rel_table'			=> 'select|tables',
-		'rel_type'			=> 'select|group|select|select_cur|select_root|select_storage',
-		'rel_dummyitem'		=> 'check',
-		'files_type'		=> 'select|images|webimages|all',
-		'files'				=> 'text',
-		'max_filesize'		=> 'text',
-		'files_selsize'		=> 'text',
-		'files_thumbs'		=> 'check',
+		'eval' 							=> 'selectm|date|time|timesec|datetime|year|int|upper|lower|double2|alpha|num|alphanum|alphanum_x|nospace|is_in',
+		'eval-required'			=> 'check',
+		'eval-trim'					=> 'check',
+		'eval-date'					=> 'check',
+		'eval-datetime'			=> 'check',
+		'eval-time'					=> 'check',
+		'eval-timesec'			=> 'check',
+		'eval-year'					=> 'check',
+		'eval-int'					=> 'check',
+		'eval-upper'				=> 'check',
+		'eval-lower'				=> 'check',
+		'eval-alpha'				=> 'check',
+		'eval-num'					=> 'check',
+		'eval-alphanum'			=> 'check',
+		'eval-alphanum_x'		=> 'check',
+		'eval-nospace'			=> 'check',
+		'eval-md5'					=> 'check',
+		'eval-is_in'				=> 'check',
+		'eval-password'			=> 'check',
+		'eval-double2'			=> 'check',
+		'eval-unique'				=> 'check',
+		'eval-uniqueInPid'	=> 'check',
+		'is_in'							=> 'text',
+		'name'							=> 'text',
+		'size' 							=> 'text',
+		'max' 							=> 'text',
+		'checkbox'					=> 'check',
+		'unique'						=> 'radio|G|L|',
+		'wiz_color'					=> 'check',
+		'wiz_link'					=> 'check',
+		'wiz_addrec'				=> 'check',
+		'wiz_listrec'				=> 'check',
+		'wiz_editrec'				=> 'check',
+		'cols' 							=> 'text',
+		'rows' 							=> 'text',
+		'rte'								=> 'select|tt_content|none',
+		'check_default'			=> 'check',
+		'numberBoxes'				=> 'text',
+		'select_items'			=> 'text',
+		'select_icons'			=> 'check',
+		'maxitems'					=> 'text',
+		'relations_mm'			=> 'check',
+		'rel_table'					=> 'select|tables',
+		'rel_type'					=> 'select|group|select|select_cur|select_root|select_storage',
+		'rel_dummyitem'			=> 'check',
+		'files_type'				=> 'select|images|webimages|all',
+		'files'							=> 'text',
+		'max_filesize'			=> 'text',
+		'files_selsize'			=> 'text',
+		'files_thumbs'			=> 'check',
 	);
 	
 	// The possible field types like in kickstarter
 	protected $fieldType = array(
-		'input'						=> array('name', 'type_t3dev', 'size', 'max', 'required'),
-		'input+'					=> array('name', 'type_t3dev', 'size', 'max', 'is_in', 'required', 'checkbox', 'eval', 'trim', 'password', 'md5', 'unique', 'wiz_color', 'wiz_link'),
+		'input'						=> array('name', 'type_t3dev', 'size', 'max', 'eval-required'),
+		'input+'					=> array('name', 'type_t3dev', 'size', 'max', 'is_in', 'eval-required', 'checkbox', 'eval', 'eval-trim', 'eval-password', 'eval-md5', 'unique', 'wiz_color', 'wiz_link'),
 		'textarea'				=> array('name', 'type_t3dev', 'cols', 'rows'),
 		'textarea_rte'		=> array('name', 'type_t3dev', 'rte'),
 		'textarea_nowrap'	=> array('name', 'type_t3dev', 'cols', 'rows'),
@@ -156,18 +178,7 @@ class tx_t3dev_flexformField {
 		$this->request = t3lib_div::_GP('ffgen');
 		$this->config['TCEforms']['config']['type'] = $this->fieldTypeMapping[$config['TCEforms']['config']['type_t3dev']];
 
-		// Check if eval values are allowed. Else delete it
-		if($parts = $this->config['TCEforms']['config']['eval']) {
-			if(!is_array($parts)) {
-				$parts = t3lib_div::trimExplode(',', $parts);
-			}
-			for($i = 0; $i < count($parts); $i++) {
-				if(t3lib_div::inArray($this->evalValues, $parts[$i])) {
-					$eval[] = $parts[$i];
-				}
-			}
-			$this->config['TCEforms']['config']['eval'] = implode(',', $eval);
-		}
+		$this->checkEvalValues();
 		
 		// parse wizards
 		if (is_array($this->config['TCEforms']['config']['wizards']['link'])) {
@@ -206,6 +217,37 @@ class tx_t3dev_flexformField {
 	}
 	
 	/**
+	 * Convert value of FFG into real eval-values
+	 * Check defined eval-values if they are allowed
+	 *
+	 * @return	HTML
+	 */
+	protected function checkEvalValues() {
+		$eval = array();
+		$fieldConfig = $this->config['TCEforms']['config'];
+		//Loop selfmade fields by FlexFormGenerator
+		foreach($fieldConfig as $key=>$value) {
+			if(substr($key, 0, 5) == 'eval-') {
+				$eval[] = substr($key, 5);
+				unset($this->config['TCEforms']['config'][$key]); 
+			}
+		}
+		//Check values in eval-array
+		if($parts = $this->config['TCEforms']['config']['eval']) {
+			if(!is_array($parts)) {
+				$parts = t3lib_div::trimExplode(',', $parts);
+			}
+			for($i = 0; $i < count($parts); $i++) {
+				if(t3lib_div::inArray($this->evalValues, $parts[$i])) {
+					$eval[] = $parts[$i];
+				}
+			}
+		}
+		//If eval-values found, than insert them into eval-array
+		if(count($eval)) $this->config['TCEforms']['config']['eval'] = implode(',', $eval);
+	}
+
+	/**
 	 * Get html for selected field
 	 *
 	 * @return	HTML
@@ -213,7 +255,9 @@ class tx_t3dev_flexformField {
 	public function getFieldOverview() {
 		debug($this->config, 'conf');
 		$content = '<div class="t3dev_field_'.$this->config['TCEforms']['config']['type_t3dev'].'">';
-		$fieldConfig = $this->fieldType[$this->config['TCEforms']['config']['type_t3dev']]; 
+		$fieldConfig = $this->fieldType[$this->config['TCEforms']['config']['type_t3dev']];
+		//print_r($fieldConfig).'<br />';
+		//print_r($this->config).'<br />';
 		for ($i=0; $i < count($fieldConfig); $i++) {
 			//I don't understand this part. There is no "type" defined in array?!?!
 			//if ($this->fieldType[$this->config['TCEforms']['config']['type_t3dev']][$i] == 'type') {
@@ -225,10 +269,27 @@ class tx_t3dev_flexformField {
 					'.$this->getEditField('name', $this->name).'			
 				';
 			} else {
-				$content .= '
-				<label class="label_'.$fieldConfig[$i].'">'.$GLOBALS['LANG']->getLL('label_flexform_param_'.$fieldConfig[$i]).'</label>
-				'.$this->getEditField($fieldConfig[$i], $this->config['TCEforms']['config'][$fieldConfig[$i]]).'			
-				';
+				//eval can contain more than one value
+				if(substr($fieldConfig[$i], 0, 5) == 'eval-') {
+					$checked = false;
+					$evalValue = substr($fieldConfig[$i], 5);
+					$parts = t3lib_div::trimExplode(',', $this->config['TCEforms']['config']['eval']);
+					for($x = 0; $x < count($parts); $x++) {
+						if($evalValue == $parts[$x]) {
+							$checked = true; 
+						}
+					}
+					(!$checked)? $value = 0: $value = $evalValue; 
+					$content .= '
+						<label class="label_eval-'.$evalValue.'">'.$GLOBALS['LANG']->getLL('label_flexform_param_eval-'.$evalValue).'</label>
+						'.$this->getEditField('eval-'.$evalValue, $value).'
+					';
+				} else {
+					$content .= '
+						<label class="label_'.$fieldConfig[$i].'">'.$GLOBALS['LANG']->getLL('label_flexform_param_'.$fieldConfig[$i]).'</label>
+						'.$this->getEditField($fieldConfig[$i], $this->config['TCEforms']['config'][$fieldConfig[$i]]).'
+					';					
+				}
 			}
 		}
 		$content .= '</div>';
@@ -253,6 +314,7 @@ class tx_t3dev_flexformField {
 	 * @return	HTML
 	 */
 	public function getEditField($param, $value) {
+		echo 'getEditField P:'.$param.'V:'.$value.'<br />';
 		if ($param == 'type_t3dev') {
 			$content = '<select class="field_'.$param.'" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']">';
 			foreach ($this->fieldType as $k => $v) {
@@ -276,7 +338,7 @@ class tx_t3dev_flexformField {
 				case 'text' :
 					return '<input class="field_'.$param.'" type="text" name="ffgen[sheetData]['.$this->pObj->getFromSession('sheet').']['.$this->name.'][TCEforms][config]['.$param.']" value="'.$value.'" />';
 				break;
-				case 'check' :
+				case 'check':
 					if ($value) {
 						$checked = ' checked="checked"';
 					}
@@ -352,16 +414,17 @@ class tx_t3dev_flexformField {
 	 */
 	public function asArray() {
 		// post process eval values
+		$this->checkEvalValues();
 		$ret = $this->config;
-		print_r($ret);
-		for ($i=0; $i<count($this->evalValues); $i++) {
-			if ($value = $ret['TCEforms']['config'][$this->evalValues[$i]]) {
+		/*
+		for($i=0; $i<count($this->evalValues); $i++) {
+			if($value = $ret['TCEforms']['config'][$this->evalValues[$i]]) {
 				if (!t3lib_div::inList($ret['TCEforms']['config']['eval'], $this->evalValues[$i])) {
 					$ret['TCEforms']['config']['eval'] = $this->evalValues[$i] . ',' . $ret['TCEforms']['config']['eval'];
 				}
 				unset($ret['TCEforms']['config'][$this->evalValues[$i]]);
 			}
-		}
+		}*/
 		
 		// post process wiz_link
 		if ($ret['TCEforms']['config']['wiz_link']) {

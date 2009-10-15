@@ -91,12 +91,12 @@
 			<label index="label_flexform_param_eval">Evaluate value to</label>
 			<label index="label_flexform_param_size">Field width (5-48 relative, 30 default)</label>
 			<label index="label_flexform_param_max">Max characters</label>
-			<label index="label_flexform_param_required">Required</label>
+			<label index="label_flexform_param_eval-required">Required</label>
 			<label index="label_flexform_param_checkbox">Apply checkbox</label>
-			<label index="label_flexform_param_trim">trim, remove whitespace before and after</label>
+			<label index="label_flexform_param_eval-trim">trim, remove whitespace before and after</label>
 			<label index="label_flexform_param_stripspace">Strip space</label>
-			<label index="label_flexform_param_password">Is password field</label>
-			<label index="label_flexform_param_md5">Save as MD5</label>
+			<label index="label_flexform_param_eval-password">Is password field</label>
+			<label index="label_flexform_param_eval-md5">Save as MD5</label>
 			<label index="label_flexform_param_is_in">is_in value</label>
 			<label index="label_flexform_param_unique">Unique</label>
 			<label index="label_flexform_param_wiz_color">Add colorpicker wizard</label>

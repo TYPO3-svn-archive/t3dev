@@ -3,7 +3,7 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 if (TYPO3_MODE=='BE')	{
-	define('T3dev_version', '1.2.0');
+	define('T3dev_version', '1.1.5');
 	$TYPO3_CONF_VARS['typo3/backend.php']['additionalBackendItems'][] = t3lib_extMgm::extPath('t3dev').'class.tx_t3dev_additionalToolbarIcons.php';
 
 	$_REL_PATH = t3lib_extMgm::extRelPath('t3dev');
@@ -34,15 +34,13 @@ if (TYPO3_MODE=='BE')	{
 			
 			// APIDocs
 		array('APIDocs', '#', $_REL_PATH.'icons/ico_t3.gif'),
+		array('TYPO3 API 4.4.0beta2', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.4.0beta2/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
+		array('TYPO3 API 4.3.3', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.3.3/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
+		array('TYPO3 API 4.3.0', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.3.0/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
+		array('TYPO3 API 4.2.6', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.2.6/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
+		array('TYPO3 API 4.2.5', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.2.5/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
 		array('TYPO3 API 4.2.1', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.2.1/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
 		array('TYPO3 API 4.2.0', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.2.0/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
-		array('TYPO3 API 4.1.7', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.1.7/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
-		array('TYPO3 API 4.1.6', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.1.6/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
-		array('TYPO3 API 4.1.2', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.1.2/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
-		array('TYPO3 API 4.0.9', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.0.9/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
-		array('TYPO3 API 4.0.8', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.0.8/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
-		array('TYPO3 API 4.0.4', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.0.4/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
-		array('TYPO3 API 4.0.0', 'http://www.typo3-unleashed.net/typo3apidocs/typo3api_4.0.0/html/index.html', $_REL_PATH.'icons/ico_t3.gif'),
 	
 			// T3dev
 		array('T3dev', '#', $_REL_PATH.'icons/ico_t3.gif'),

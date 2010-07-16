@@ -27,59 +27,42 @@ require_once(t3lib_extMgm::extPath('t3dev').'lib/modules/class.tx_t3dev_basicsMo
 require_once(t3lib_extMgm::extPath('t3dev').'lib/class.tx_t3dev_flexform.php');
 
 class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
+	protected $LANG;
 	/**
 	 * @var t3lib_SCbase
 	 */
 	protected $pObj;
-	protected $error = '';
-	protected $message = '';
 	/**
 	 * @var tx_t3dev_basicsModule
 	 */
 	protected $basics;
 	protected $moduleId = 'flexformModule';
 	
-	public function init(&$pObj) {
+	public function __construct(&$pObj, &$LANG) {
 		$this->pObj = $pObj;
-		$this->basics = t3lib_div::makeInstance('tx_t3dev_basicsModule');
-		$this->basics->init($this->pObj);
+		$this->LANG = &$LANG;
+		$basicsModuleClassname = t3lib_div::makeInstanceClassName('tx_t3dev_basicsModule');
+		$this->basics = new $basicsModuleClassname($this->pObj, $this->LANG);
 		$this->sessionData = $GLOBALS['BE_USER']->getSessionData('tx_t3dev_'.$this->moduleId);
 		
 		$action = t3lib_div::_GP('createNewFileAction');
 		if ($action) {
-			if(!$this->createNewFileAction()) {
-				$this->error = $GLOBALS['LANG']->getLL(
-					'err_wrong_filepath'
-				);
-			} else {
-				$this->message = $GLOBALS['LANG']->getLL(
-					'info_file_created'
-				);
-			}
+			$this->createNewFileAction();
 		}
 	}
 	
 	public function getTitle() {
-		return $GLOBALS['LANG']->getLL($this->moduleId.'Title');
+		return $this->LANG->getLL($this->moduleId.'Title');
 	}
 	
 	public function getContent() {
-		$content =  $GLOBALS['LANG']->getLL($this->moduleId.'Description');
-		$content .= $this->pObj->doc->divider(5);
-		$content .= $this->getGlobalConfigHeader();
-		//$content .= $this->pObj->doc->dfw('test');
-		//$content .= $this->pObj->doc->rfw('red');
-
-		if(trim($this->error) != '') {
-			$content .= $this->pObj->doc->rfw($this->error);
-		}
-		if(trim($this->message) != '') {
-			$content .= $this->message;
-		}
-		$content .= $this->pObj->doc->divider(5);
-
-
-		return $content;
+		$ret =  $this->LANG->getLL($this->moduleId.'Description');
+		$ret .= $this->pObj->doc->divider(5);
+		$ret .= $this->getGlobalConfigHeader();
+		
+		//$ret .= $this->pObj->doc->dfw('test');
+		//$ret .= $this->pObj->doc->rfw('red');
+		return $ret;
 	}
 	
 	public function getPObj() {
@@ -96,24 +79,23 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 	}
 	
 	protected function getGlobalConfigHeader() {
-		$ret .= $this->pObj->doc->funcMenu($GLOBALS['LANG']->getLL('label_select_extensiontype'), $this->basics->getSelectForExtensionType());
-		$ret .= $this->pObj->doc->funcMenu($GLOBALS['LANG']->getLL('label_select_extension'), $this->basics->getSelectForLocalExtensions());
-		$ret .= $this->pObj->doc->funcMenu($GLOBALS['LANG']->getLL('label_select_file'), $this->basics->getSelectForExtensionFiles('xml'));
+		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_extensiontype'), $this->basics->getSelectForExtensionType());
+		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_extension'), $this->basics->getSelectForLocalExtensions());
+		$ret .= $this->pObj->doc->funcMenu($this->LANG->getLL('label_select_file'), $this->basics->getSelectForExtensionFiles('xml'));
 		$selectedFile = $this->basics->getCurrentFileName();
 		if (is_array($selectedFile)) {
-			$ret .= $this->pObj->doc->section($GLOBALS['LANG']->getLL('label_selected_file'), $selectedFile[0]);
+			$ret .= $this->pObj->doc->section($this->LANG->getLL('label_selected_file'), $selectedFile[0]);
 			$ret .= $this->pObj->doc->divider(5);
 
-			$flexform = t3lib_div::makeInstance('tx_t3dev_flexform');
+			$flexformClassname = t3lib_div::makeInstanceClassName('tx_t3dev_flexform');
+			$flexform = new $flexformClassname($this, $this->LANG, $this->basics->getCurrentExtKey());
 			$flexform->setFilename($selectedFile[0]);
-			$flexform->init($this, $this->basics->getCurrentExtKey());
+			$flexform->init();
 			$ret .= $flexform->getContent();
 		} else {
-			$ret .= $this->pObj->doc->section($GLOBALS['LANG']->getLL('label_selected_file'), $selectedFile);
-			//Show box only if an option was selected
-			if ($this->pObj->MOD_SETTINGS['extSel']) {
-				$ret .= $this->getCreateNewFileBox();
-			}
+			$ret .= $this->pObj->doc->section($this->LANG->getLL('label_selected_file'), $selectedFile);
+			$ret .= $this->getCreateNewFileBox();
+			$ret .= $this->pObj->doc->divider(5);
 		}
 		return $ret;
 	}
@@ -123,48 +105,42 @@ class tx_t3dev_flexformModule implements tx_t3dev_moduleInterface {
 		$newFileName = ($this->pObj->MOD_SETTINGS['newFileName']) ? ($this->pObj->MOD_SETTINGS['newFileName']) : 'flexforms/';
 		$content .= '<input type="text" size="60" name="SET[newFileName]" value="'.htmlspecialchars($newFileName).'" />';
 		$content .= $this->pObj->doc->spacer(5);
-		$content .= '<input type="submit" name="createNewFileAction" value="'.htmlspecialchars($GLOBALS['LANG']->getLL('label_create_file')).'" /><br />';
+		$content .= '<input type="submit" name="createNewFileAction" value="'.htmlspecialchars($this->LANG->getLL('label_create_file')).'" />';
 		
-		return $this->pObj->doc->section($GLOBALS['LANG']->getLL('label_new_file'), $content);
+		return $this->pObj->doc->section($this->LANG->getLL('label_new_file'), $content);
 	}
 	
 	protected function createNewFileAction() {
-		$isDir = false;
 		$settings = t3lib_div::_GP('SET');
 		$newFileName = $this->basics->getCurrentExtDir() . $settings['newFileName'];
-		if(TYPO3_OS == 'WIN')
-			$newFileName = t3lib_div::fixWindowsFilePath($newFileName);
-		//Check if value is a file. Else: Forget it...
-		if(substr($newFileName, -4) == '.xml' && $newFileName != '') {
-			if (is_dir(dirname($newFileName))) {
-				$isDir = true;	
-			}	elseif ((!is_dir(dirname($newFileName)) && (substr($newFileName,0,1) == '/')) || (!is_dir(dirname($newFileName)) && TYPO3_OS == 'WIN')) {
-				if (t3lib_div::mkdir(dirname($newFileName))) {
-					$isDir = true;
-				}
+		$isDir = false;
+		if (is_dir(dirname($newFileName))) {
+			$isDir = true;
+		} elseif ((!is_dir(dirname($newFileName)) && (substr($newFileName,0,1) == '/'))) {
+			if (t3lib_div::mkdir(dirname($newFileName))) {
+				$isDir = true;
 			}
-			if($isDir) {
-				$basicFlexform = '<T3DataStructure>
-	<meta>
-		<langDisable>1</langDisable>
-	</meta>
-	<sheets>
-		<sDEF>
-			<ROOT>
-				<TCEforms>
-					<sheetTitle>LLL:EXT:'.$this->basics->getCurrentExtKey().'/locallang_db.php:tt_content.pi_flexform.sheet_general</sheetTitle>
-				</TCEforms>
-				<type>array</type>
-				<el>
-				</el>
-			</ROOT>
-		</sDEF>
-	</sheets>
+		} 
+		if ($isDir) {
+			$basicFlexform = '<T3DataStructure>
+ <meta>
+       <langDisable>1</langDisable>
+ </meta>
+ <sheets>
+  <sDEF>
+   <ROOT>
+    <TCEforms>
+     <sheetTitle>LLL:EXT:'.$this->basics->getCurrentExtKey().'/locallang_db.php:tt_content.pi_flexform.sheet_general</sheetTitle>
+    </TCEforms>
+    <type>array</type>
+    <el>
+    </el>
+   </ROOT>
+  </sDEF>
+ </sheets>
 </T3DataStructure>';
-				t3lib_div::writeFile($newFileName, $basicFlexform);
-				return true;
-			}
-		} else return false;
+			t3lib_div::writeFile($newFileName, $basicFlexform);
+		}
 	}
 }
 ?>

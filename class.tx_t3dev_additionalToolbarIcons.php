@@ -68,11 +68,20 @@ class tx_t3dev_additionalToolbarIcons implements backend_toolbarItem {
 					$sectionCounter++;
 					$links[] = '<li class="section"><span id="section'.$sectionCounter.'">'.htmlspecialchars($linkConf[0]).'</span></li>';
 				} else {
-					$links[] = '<li class="section'.$sectionCounter.'"><a href="'.$linkConf[1].'" onclick="'.$aOnClick.'" class="'.$linkConf[3].'"><img src="'.$linkConf[2].'" width="16" height="16" title="'.$linkConf[1].'" alt="'.$linkConf[1].'"/>'.htmlspecialchars($linkConf[0]).'</a></li>';
+					if ($linkConf[0] == 'TYPO3 API ' . TYPO3_version) {
+						$highlight = ' style="border: 1px solid #FF8700; background: #FF9F33;"';
+					} else {
+						$highlight = '';
+					}
+					$links[] = '<li class="section'.$sectionCounter.'"><a href="'.$linkConf[1].'" onclick="'.$aOnClick.'" class="'.$linkConf[3].'" '.$highlight.'><img src="'.$linkConf[2].'" width="16" height="16" title="'.$linkConf[1].'" alt="'.$linkConf[1].'"/>'.htmlspecialchars($linkConf[0]).'</a></li>';
 				}
 			}
 		}
-		$output = '<a href="#" class="toolbar-item"><img src="'.$this->_REL_PATH.'icons/ico_t3dev.gif" width="54" height="16" title="T3dev" alt="" /></a>';
+		if (version_compare(TYPO3_version, '4.4.0', '>=')) {
+			$output = '<a href="#" class="toolbar-item"><img src="'.$this->_REL_PATH.'icons/ico_t3dev.png" width="54" height="16" title="T3dev" alt="" /></a>';
+		} else {
+			$output = '<a href="#" class="toolbar-item"><img src="'.$this->_REL_PATH.'icons/ico_t3dev.gif" width="54" height="16" title="T3dev" alt="" /></a>';
+		}
 		$output .= '<ul class="toolbar-item-menu" style="display: none;">';
                 $output .= implode('',$links);
 		$output .= '</ul>';

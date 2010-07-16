@@ -1,51 +1,7 @@
 (add new changes on top of this file)
 project homepage: http://forge.typo3.org/projects/show/extension-t3dev
 
-09-10-15 Stefan Frömken <firma@sfroemken.de>
-	* checkboxes like required, trim, password works correct now
-	* checkboxes will be checked, if they are set in FlexForm
-	* Added a function to merge original eval-values and eval-values created by FFG
-	* Changed Title from Flexform Generator to Flexform Editor
-	* First page (sDEF) of sample xml from wiki.typo3.org can be displayed.
-	* Now you can delete fields
-	* Changed all new instance calls to t3lib_div::makeInstance
-	* If you choose a sheet other then sDEF, create a new sheet, create a new field, this field was added to the sheet selected before
-	* Sometimes you have to update current page twice before you get the available fields.
-	* Litte translation changes
-
-09-10-14 Stefan Frömken <firma@sfroemken.de>
-	* better eval value check, without ending komma (,)
-	* Inserted a function which adds a sheet/sheettitle to flexforms if there is no sheet defined. Errorhandling implemented
-	* XML-files will be saved with tabbed spaces now. So every user can define space in his program himself.
-	* Added some comments for better reading
-	* Added the possibility to remove sheets
-	* delete locallang-files from filelist
-	* translation updates
-
-09-10-13 Stefan Frömken <firma@sfroemken.de>
-	* Now you can create new xml-files also on Windows
-	* Better Errorhandling on filecreation
-	* Now you also can read XML-files without sheets and sDef
-	* Now only XML-files can be written
-	* Some translation changes
-	* Filecreation will be hidden, if no extension is selected
-	* Set version to 1.2.0
-
-09-10-12 Stefan Frömken <firma@sfroemken.de>
-	* code updates:
-	* replace makeInstanceClassname with makeInstance
-	* replace of $this->LANG with $GLOBALS['LANG']
-	* replace depricated functions ereg_* with preg_*
-
-08-06-29 Frank Nägler <typo3@naegler.net>
-	* new features:
-	* _ #577: FlexForm-Generator
-	* _ #680: Hide Link-Menu for non-admins via extManager
-	* _ Link-Update: APIDocs
-	* _ new Link-Menu functions: hide/show submenus
-	* please clear your browser cache for the new Link-Menu functions.
-
-08-05-14 Frank Nägler <typo3@naegler.net>
+08-05-14 Frank Nägler<typo3@naegler.net>
 	* bugfix: <?php
 	* two new links:
 	  APIDocs: TYPO3 API 4.1.6 & 4.2.0 

@@ -232,11 +232,12 @@ class  tx_t3dev_module1 extends t3lib_SCbase {
 	function moduleContent() {
 		global $LANG;
 		$this->moduleId = intval($this->MOD_SETTINGS['function']);
-		$this->module = t3lib_div::makeInstance($this->modules[$this->moduleId]);
-		$this->module->init($this);
+		$this->moduleClassname = $this->modules[$this->moduleId];
 
-		$this->content .= $this->doc->section(
-			$this->module->getTitle(), $this->module->getContent(), 0, 0);
+		$moduleClass = t3lib_div::makeInstanceClassname($this->moduleClassname);
+		$this->module = new $moduleClass($this, $LANG);
+
+		$this->content .= $this->doc->section($this->module->getTitle(), $this->module->getContent(), 0, 1);
 	}
 	
 	public function getExtensionDir() {

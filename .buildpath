@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path=""/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry kind="prj" path="/typo3_src-4.2.0"/>
+	<buildpathentry kind="prj" path="/tx_fn_lib"/>
+</buildpath>
